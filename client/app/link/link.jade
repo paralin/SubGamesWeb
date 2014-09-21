@@ -1,0 +1,34 @@
+#homeCont
+  #titleCont SUB GAMES
+  #subtitleCont Play with {{streamer!=null?streamer.name:"your favorite streamers."}}!
+  .netAnim(net-anim="")
+  #loginCont
+    .loginBtns(ng-if="auth.currentUser!=null",style="text-align:center;margin-bottom:5px")
+      button.btn.btn-danger(ng-click="auth.logout()")
+        i.fa.fa-sign-out
+        | Sign Out
+    .loginBtns
+      button.btn(ng-if="auth.currentUser==null||auth.currentUser.steam==null",ng-click="steamSignin()")
+        i.fa.fa-steam
+        | Connect Steam
+      button.btn(ng-if="auth.currentUser!=null&&auth.currentUser.steam!=null",ng-click="auth.disconnectSteam()")
+        i.fa.fa-steam
+        | Disconnect Steam
+      button.btn(ng-if="auth.currentUser==null||auth.currentUser.twitchtv==null",ng-click="twitchSignin()",style="float:right")
+        i.fa.fa-twitch
+        | Connect Twitch
+      button.btn(ng-if="auth.currentUser!=null&&auth.currentUser.twitchtv!=null",ng-click="auth.disconnectTwitch()",style="float:right")
+        i.fa.fa-twitch
+        | Disconnect Twitch
+    .loginBtns(ng-if="auth.currentUser!=null&&auth.currentUser.steam!=null&&auth.currentUser.twitchtv!=null",style="margin-top:5px")
+      .loginBtns(ng-if="streamer!=null",style="text-align:center !important;")
+        button.btn(ng-click="getStarted()")
+          i.fa.fa-gamepad
+          | Get started playing!
+      .loginBtns(ng-if="streamer==null")
+        button.btn
+          i.fa.fa-gamepad
+          | I am a player.
+        button.btn(style="float:right")
+          i.fa.fa-video-camera
+          | I am a streamer.

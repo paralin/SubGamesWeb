@@ -49,13 +49,16 @@ var UserSchema = mongoose.Schema({
  */
 
 //Validate steam ID
+/*
 UserSchema
 .path('steam.steamid')
 .validate(function(sid){
   return /\d{17}/g.test(sid);
 }, 'SteamID is a 17 digit integer.');
+*/
 
 // Validate steamid is not taken
+/*
 UserSchema
   .path('steam.steamid')
   .validate(function(value, respond) {
@@ -69,6 +72,7 @@ UserSchema
       respond(true);
     });
 }, 'The specified steam ID is already registered.');
+*/
 
 var validatePresenceOf = function(value) {
   return value!=null;

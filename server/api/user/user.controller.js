@@ -4,6 +4,7 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var _ = require('lodash');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -19,8 +20,8 @@ exports.status = function(req, res){
       profile: req.user.profile,
       authItems: req.user.authItems
     };
-    if(req.user.steam) user.steam = req.user.steam;
-    if(req.user.twitchtv) user.twitchtv = req.user.twitchtv;
+    if(req.user.steam && !_.isEmpty(req.user.steam)) user.steam = req.user.steam;
+    if(req.user.twitchtv && !_.isEmpty(req.user.twitchtv)) user.twitchtv = req.user.twitchtv;
     var profile = {
       _id: req.user._id,
       steamid: req.user.steam.steamid

@@ -3,12 +3,13 @@
 angular.module 'subgamesApp', [
   'ngResource',
   'ngSanitize',
+  'ngCookies',
   'ui.router',
   'ui.bootstrap'
 ]
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
   $urlRouterProvider
-  .otherwise '/'
+  .otherwise '/l'
 
   $locationProvider.html5Mode true
   $httpProvider.interceptors.push 'authInterceptor'
@@ -22,7 +23,7 @@ angular.module 'subgamesApp', [
   # Intercept 401s and redirect you to login
   responseError: (response) ->
     if response.status is 401
-      $location.path '/login'
+      $location.path '/l'
     $q.reject response
 
 .run ($rootScope, $location, Auth) ->
@@ -30,8 +31,7 @@ angular.module 'subgamesApp', [
   $rootScope.$on '$stateChangeStart', (event, next) ->
     Auth.getLoginStatus (user, token) ->
       loggedIn = user?
-      $location.path "/login" if next.authenticate and not loggedIn
-      #$location.path "/panel" if loggedIn and next.name is "login"
+      $location.path "/link" if next.authenticate and not loggedIn
   $rootScope.GameMode =
     NONE: 0
     AP: 1

@@ -16,11 +16,19 @@ angular.module('subgamesApp').factory 'Auth', ($location, $rootScope, $http, Use
     logout: ->
       $http.get('/auth/logout').success ->
         service.update()
+    disconnectSteam: ->
+      $http.get('/auth/steam/disconnect').success ->
+        service.update()
+    disconnectTwitch: ->
+      $http.get('/auth/twitchtv/disconnect').success ->
+        service.update()
     update: ->
       deferred = $q.defer()
       @currentPromise = deferred.promise
       data = User.get =>
         if data.isAuthed
+          data.user.steam = undefined if _.isEmpty data.user.steam
+          data.user.twitchtv = undefined if _.isEmpty data.user.twitchtv
           @currentUser = data.user
           @currentToken = data.token
           @currentServer = data.server
