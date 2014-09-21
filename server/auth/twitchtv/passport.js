@@ -2,16 +2,6 @@ var passport = require('passport');
 var TwitchStrategy = require('passport-twitchtv').Strategy;
 
 exports.setup = function (User, config) {
-  passport.serializeUser(function(user, done){
-    done(null, user._id);
-  });
-
-  passport.deserializeUser(function(id, done){
-    User.findById(id, function(err, user){
-      done(err, user);
-    });
-  });
-
   scope = "user_read user_follows_edit user_subscriptions channel_check_subscription";
   passport.use(new TwitchStrategy({
     clientID: process.env.TWITCH_ID,
@@ -65,7 +55,7 @@ exports.setup = function (User, config) {
             newUser._id = buf.toString('hex');
             newUser.twitchtv = prof;
             newUser.twitchtv_tokens = tok;
-            newUser.authItems = ['subscriber'];
+            newUser.authItems = [];
             newUser.save(function(err){
               return done(err, newUser);
             });

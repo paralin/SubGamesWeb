@@ -17,6 +17,19 @@ exports.setup = function (User, config) {
 
   passport.deserializeUser(function(id, done){
     User.findById(id, function(err, user){
+      if(user){
+        if(user.steam && user.twitchtv){
+          if(user.authItems.indexOf('play')==-1){
+            user.authItems.push("play");
+            user.save();
+          }
+        }else{
+          if(user.authItems.indexOf('play')!=-1){
+            user.authItems = [];
+            user.save();
+          }
+        }
+      }
       done(err, user);
     });
   });
@@ -57,7 +70,7 @@ exports.setup = function (User, config) {
             var newUser = new User();
             newUser._id = buf.toString('hex');
             newUser.steam = profile;
-            newUser.authItems = ['subscriber'];
+            newUser.authItems = [];
             newUser.save(function(err){
               return done(err, newUser);
             });

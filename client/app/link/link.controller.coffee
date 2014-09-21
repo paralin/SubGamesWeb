@@ -11,7 +11,7 @@ angular.module 'subgamesApp'
         if $stateParams.streamer?
           $location.url "/p/"+$stateParams.streamer
         else
-          $location.url "/l"
+          $location.url "/p"
   $scope.twitchSignin = ->
     $cookieStore.put("authReturn", $location.url())
     window.location.href = "/auth/twitchtv"
