@@ -3,6 +3,7 @@
 angular.module 'subgamesApp'
 .controller 'PlayCtrl', ($scope, Network, $rootScope, $location, $stateParams, safeApply, Auth) ->
   c=[]
+  $scope.network = Network
   Auth.getLoginStatus (u)->
     Network.connect()
   c.push $rootScope.$on "invalidAuth", ->
