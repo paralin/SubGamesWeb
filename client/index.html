@@ -31,23 +31,13 @@
     <div ui-view=""></div>
     <div footer=""></div>
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
-
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
     <!-- build:js(client) app/vendor.js -->
+    <script src="components/xsockets/xsockets.js"></script>
       <!-- bower:js -->
       <script src="bower_components/jquery/dist/jquery.js"></script>
       <script src="bower_components/angular/angular.js"></script>
@@ -66,13 +56,16 @@
           <script src="app/authreturn/authreturn.js"></script>
           <script src="app/footer/footer.js"></script>
           <script src="app/link/link.js"></script>
+          <script src="app/play/play.js"></script>
           <script src="components/auth/auth.js"></script>
           <script src="components/auth/user.js"></script>
           <script src="components/mongoose-error/mongoose-error.js"></script>
+          <script src="components/network/network.js"></script>
           <script src="components/safeApply/safeApply.js"></script>
           <script src="components/streamers/streamer.js"></script>
           <script src="components/win-state/win-state.js"></script>
           <script src="components/net-anim/net-anim.directive.js"></script>
+          <script src="components/xsockets/xsockets.js"></script>
           <!-- endinjector -->
         <!-- endbuild -->
 </body>

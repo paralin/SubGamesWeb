@@ -24,7 +24,7 @@ router.get('/return', auth, successRedir);
 
 var disconnect = function(req, res, next){
   if(req.user){
-    if(req.user.steam && !_.isEmpty(req.user.twitchtv)){
+    if(req.user.steam && !_.isEmpty(req.user.steam)){
       req.user.twitchtv = undefined;
       req.user.save();
     }else{

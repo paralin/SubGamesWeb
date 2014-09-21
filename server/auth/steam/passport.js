@@ -2,6 +2,7 @@ var passport = require('passport');
 var SteamStrategy = require('passport-steam').Strategy;
 var Steam = require('steam-webapi');
 var request = require('request');
+var _ = require('lodash');
 
 var steam;
 exports.setup = function (User, config) {
@@ -18,13 +19,13 @@ exports.setup = function (User, config) {
   passport.deserializeUser(function(id, done){
     User.findById(id, function(err, user){
       if(user){
-        if(user.steam && user.twitchtv){
-          if(user.authItems.indexOf('play')==-1){
+        if(user.steam && user.steam.steamid && user.twitchtv && user.twitchtv.id){
+          if(!_.contains(user.authItems, 'play')){
             user.authItems.push("play");
             user.save();
           }
         }else{
-          if(user.authItems.indexOf('play')!=-1){
+          if(_.contains(user.authItems, "play")){
             user.authItems = [];
             user.save();
           }
@@ -66,15 +67,23 @@ exports.setup = function (User, config) {
             return done(error, req.user);
           });
         }else{
-          require('crypto').randomBytes(12, function(ex, buf){
-            var newUser = new User();
-            newUser._id = buf.toString('hex');
-            newUser.steam = profile;
-            newUser.authItems = [];
-            newUser.save(function(err){
-              return done(err, newUser);
+          if(user){
+            user.steam = profile;
+            user.authItems = [];
+            user.save(function(err){
+              return done(err, user);
             });
-          });
+          }else{
+            require('crypto').randomBytes(12, function(ex, buf){
+              var newUser = new User();
+              newUser._id = buf.toString('hex');
+              newUser.steam = profile;
+              newUser.authItems = [];
+              newUser.save(function(err){
+                return done(err, newUser);
+              });
+            });
+          }
         }
       })
     });
