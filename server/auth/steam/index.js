@@ -34,7 +34,7 @@ var disconnect = function(req, res, next){
 };
 
 router.get('/disconnect', disconnect, function(req, res){
-  res.write("You have disconnected Steam.");
+  res.redirect("/authreturn");
 });
 
 module.exports = router;

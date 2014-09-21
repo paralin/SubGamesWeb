@@ -30,8 +30,8 @@ angular.module 'subgamesApp', [
   # Redirect to login if route requires auth and you're not logged in
   $rootScope.$on '$stateChangeStart', (event, next) ->
     Auth.getLoginStatus (user, token) ->
-      loggedIn = user?
-      $location.path "/link" if next.authenticate and not loggedIn
+      loggedIn = user? && user.steam? && !_.isEmpty(user.steam) && user.twitchtv? && !_.isEmpty(user.twitchtv)
+      $location.path "/authreturn" if next.authenticate and not loggedIn
   $rootScope.GameMode =
     NONE: 0
     AP: 1

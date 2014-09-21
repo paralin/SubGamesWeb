@@ -4,4 +4,5 @@ angular.module 'subgamesApp'
 .directive 'footer', ->
   templateUrl: 'app/footer/footer.html'
   restrict: 'EA'
-  link: (scope, element, attrs) ->
+  link: (scope, element, attrs, Network) ->
+    scope.network = Network

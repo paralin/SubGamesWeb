@@ -1,3 +1,10 @@
-div(connectoverlay="{{network.disconnected}}")
-.col-md-12
-    | This is the play view.
+div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
+.backCont
+  button.btn(ng-click="goToLink()")
+    i.fa.fa-remove
+    | Leave Player Pool
+#homeCont(ng-if="network.activeGame==null")
+  #titleCont(style="font-size:39px") In Player Pool
+  #subtitleCont Waiting for a game slot.
+  .netAnim(net-anim="")
+  #subtitleCont You will hear a sound and accept/decline the match.

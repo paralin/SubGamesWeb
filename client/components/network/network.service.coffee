@@ -8,6 +8,8 @@ class NetworkService
   status: "Disconnected from the server."
 
   streamers: []
+  activeStream: null
+  activeGame: null
 
   constructor: (@scope, @timeout, @safeApply)->
   disconnect: ->
@@ -38,14 +40,57 @@ class NetworkService
   methods:
     play:
       checkAuth: (serv)->
-        @invoke("checkauth").then (items)->
-          if !_.contains items, "play"
-            serv.scope.$broadcast "invalidAuth"
-            serv.disconnect()
+        @invoke("checkauth").then (items)=>
+          serv.safeApply serv.scope, ->
+            if !_.contains items, "play"
+              serv.scope.$broadcast "invalidAuth"
+              serv.disconnect()
+      fetchStreamers: (serv, cb)->
+        console.log arguments
+        @invoke("getactivestreams").then (streams)=>
+          serv.safeApply serv.scope, ->
+            serv.streamers = streams
+            cb(streams)
+      registerWithStream: (serv, id, cb)->
+        @invoke("registerwithstream", {id: id}).then (ok)=>
+          serv.safeApply serv.scope, ->
+            console.log ok
+            cb ok if cb?
+      unregisterStream: (serv)->
+        @invoke("deregisterStream")
+
   handlers: 
     play:
       onopen: ->
         @play.do.checkAuth(@)
+      publicstreamupd: (upd)->
+        for stream in upd.streams
+          strm = _.findIndex @streamers, {Id: stream.Id}
+          if strm != -1
+            @streamers[strm] = stream
+          else
+            @streamers.push stream
+      publicstreamrm: (upd)->
+        for strmid in upd.ids
+          strm = _.findIndex @streamers, {Id: strmid}
+          if strm != -1
+            @streamers.splice strm, 1
+      clearstream: ->
+        @activeStream = null
+        @scope.$broadcast "clearStream"
+      streamsnapshot: (snp)->
+        @activeStream = snp
+        @scope.$broadcast "streamSnapshot", snp
+
+  callWhenOpen: (name, cb)->
+    cont = @[name]
+    if !cont?
+      console.log "CallWhenOpen called with invalid controller #{name}"
+    else
+      if cont.isOpen
+        cb(@)
+      else
+        cont.openCbs.push cb
 
   connect: ->
     @doReconnect = true
@@ -78,24 +123,36 @@ class NetworkService
           @status = "Connected to the network."
           @attempts = 0
           return
-        for name, cbs of @handlers
-          @[name] = cont = @conn.controller name
+      for name, cbs of @handlers
+        @[name] = cont = @conn.controller name
+        do (cont) ->
+          cont.openCbs = []
           cont.onopen = (ci)->
             console.log "#{name} opened."
-          for cbn, cb of cbs
-            do (cbn, cb, cont, name) ->
-              cont[cbn] = (arg)->
-                console.log cbn
-                console.log arg
+            cont.isOpen = true
+            for cb in cont.openCbs
+              cb(ci)
+            cont.openCbs = []
+        for cbn, cb of cbs
+          do (cbn, cb, cont, name) ->
+            if cbn is "onopen"
+              cont.openCbs.push (arg)->
                 safeApply scope, -> 
                   cb.call serv, arg
-        for name, cbs of @methods
-          @[name] = cont = @conn.controller name
-          cont.do = {}
-          for cbn, cb of cbs
-            do (cbn, cb, cont, name) ->
-              cont.do[cbn] = (arg)->
-                cb.call cont, arg
+            else
+              cont[cbn] = (arg)->
+                safeApply scope, -> 
+                  cb.call serv, arg
+      for name, cbs of @methods
+        @[name] = cont = @conn.controller name
+        cont.do = {}
+        for cbn, cb of cbs
+          do (cbn, cb, cont, name) ->
+            cont.do[cbn] = ->
+              args = [serv]
+              for arg in arguments
+                args.push arg 
+              cb.apply cont, args
       @conn.ondisconnected = =>
         console.log "Disconnected from the network..."
         #@disconnect()

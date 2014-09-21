@@ -6,4 +6,4 @@ angular.module 'subgamesApp'
   if path?
     $location.url path
   else
-    $location.url "/link"
+    $location.url "/l"

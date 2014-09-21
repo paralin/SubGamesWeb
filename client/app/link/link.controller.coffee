@@ -1,7 +1,8 @@
 'use strict'
 
 angular.module 'subgamesApp'
-.controller 'LinkCtrl', ($scope, Auth, Streamer, $stateParams, $cookieStore, $location) ->
+.controller 'LinkCtrl', ($scope, Auth, Streamer, $stateParams, $cookieStore, $location, Network) ->
+  Network.disconnect()
   $scope.steamSignin = ->
     $cookieStore.put("authReturn", $location.url())
     window.location.href = "/auth/steam"
@@ -11,7 +12,7 @@ angular.module 'subgamesApp'
         if $stateParams.streamer?
           $location.url "/p/"+$stateParams.streamer
         else
-          $location.url "/p"
+          $location.url "/sl"
   $scope.twitchSignin = ->
     $cookieStore.put("authReturn", $location.url())
     window.location.href = "/auth/twitchtv"

@@ -7,7 +7,7 @@ var router = express.Router();
 
 router.get('/', function(req, res){  
   req.logout();
-  res.redirect('/login');
+  res.redirect('/authreturn');
 });
 
 module.exports = router;

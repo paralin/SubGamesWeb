@@ -1,5 +1,8 @@
 #footRight
-  i.fa.fa-empire(style="margin-right:2px")
+  i.fa.fa-empire
   | Created by QUΛИТUM
-  i.fa.fa-steam(style="margin-right:2px;margin-left:2px")
+  i.fa.fa-steam
   | Powered by Steam
+#footLeft(ng-if="!network.disconnected")
+  i.fa.fa-exchange
+  | Connected.

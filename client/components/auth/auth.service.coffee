@@ -14,14 +14,11 @@ angular.module('subgamesApp').factory 'Auth', ($location, $rootScope, $http, Use
       else
         cb(@currentUser, @currentToken, @currentServer)
     logout: ->
-      $http.get('/auth/logout').success ->
-        service.update()
+      window.location.href = "/auth/logout"
     disconnectSteam: ->
-      $http.get('/auth/steam/disconnect').success ->
-        service.update()
+      window.location.href = "/auth/steam/disconnect"
     disconnectTwitch: ->
-      $http.get('/auth/twitchtv/disconnect').success ->
-        service.update()
+      window.location.href = "/auth/twitchtv/disconnect"
     update: ->
       deferred = $q.defer()
       @currentPromise = deferred.promise

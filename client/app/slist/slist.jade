@@ -1,0 +1,23 @@
+div(connectoverlay="{{showOverlay()}}", message="{{overlayMessage()}}")
+.backCont
+  button.btn(ng-click="goToLink()")
+    i.fa.fa-backward
+    | Back to Link
+.container-fluid(style="width: 100%;height: 100%;padding-top:60px",ng-if="network.streamers.length>0")
+  .row
+    .col-md-4.center-block.page-title(style="font-size:50px")
+        | Active Streamers
+  .row
+    .col-md-5.center-block.streamerList(style="float:none")
+      table.table.table-hover
+        tbody
+          tr(ng-repeat="strm in network.streamers",style="cursor:pointer",ng-click="selectStreamer(strm)")
+            td(style="width: 50px")
+              img(ng-src="{{strm.icon}}",style="width:50px;height:50px")
+            td {{strm.fullname}}
+            td {{strm.descrip}}
+#homeCont(ng-if="network.streamers.length==0")
+  #titleCont(style="font-size:39px") NO ACTIVE STREAMERS
+  #subtitleCont Nobody's playing right now.
+  .netAnim(net-anim="")
+  #subtitleCont Check back later!
