@@ -14,8 +14,8 @@ angular.module('subgamesApp').factory 'Auth', ($location, $rootScope, $http, Use
       else
         cb(@currentUser, @currentToken, @currentServer)
     logout: ->
-      $http.get '/auth/logout'
-      service.update()
+      $http.get('/auth/logout').success ->
+        service.update()
     update: ->
       deferred = $q.defer()
       @currentPromise = deferred.promise

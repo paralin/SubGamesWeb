@@ -34,16 +34,25 @@ exports.setup = function (User, config) {
       refresh: refreshToken,
       scope: scope
     };
-    if(req.user){
-      req.user.twitchtv = prof;
-      req.user.twitchtv_tokens = tok;
-      req.user.save(function(err){
-        return done(err, req.user);
-      });
-    }
-    else{
-      User.findOne({'twitchtv.id': prof.id}, function(err, user){
-        if(err) return done(err);
+    User.findOne({'twitchtv.id': prof.id}, function(err, user){
+      if(err) return done(err);
+      if(req.user){
+        if(user && req.user._id !== user._id){
+          if(user.steam){
+            user.twitchtv = user.twitchtv_tokens = null;
+            user.save();
+          }else{
+            console.log("Deleting user "+user._id+" when linking with Twitch.");
+            User.remove({'_id': user._id});
+          }
+        }
+        req.user.twitchtv = prof;
+        req.user.twitchtv_tokens = tok;
+        req.user.save(function(err){
+          return done(err, req.user);
+        });
+      }
+      else{
         if(user){
           user.twitchtv = prof;
           user.twitchtv_tokens = tok;
@@ -62,7 +71,7 @@ exports.setup = function (User, config) {
             });
           })
         }
-      });
-    }
+      }
+    });
   }));
 };

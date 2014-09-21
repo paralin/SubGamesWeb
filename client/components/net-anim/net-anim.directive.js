@@ -153,8 +153,6 @@ angular.module('subgamesApp').directive('netAnim', function($interval) {
         this.jumps = 0;
 
         var tint = (signalCount % 12) * 30;
-        // var tint = Math.floor(Math.random() * 360);
-        console.log(tint);
         this.style = 'hsl(' + tint + ',100%,50%)';
 
         for (var i = 0; i < start.connections.length; i++) {

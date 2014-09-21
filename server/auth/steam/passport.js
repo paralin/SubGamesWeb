@@ -37,9 +37,17 @@ exports.setup = function (User, config) {
         return done(err);
       profile = data.players[0];
       User.findOne({'steam.steamid': profile.steamid}, function(err, user){
-        if(err)
-          return done(err);
+        if(err) return done(err);
         if(req.user){
+          if(user && req.user._id !== user._id){
+            if(user.twitchtv){
+              user.steam = null;
+              user.save();
+            }else{
+              console.log("Deleting user "+user._id+" when linking with Steam.");
+              User.remove({"_id": user._id});
+            }
+          }
           req.user.steam = profile;
           req.user.save(function(error){
             return done(error, req.user);
