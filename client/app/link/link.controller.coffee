@@ -6,6 +6,13 @@ angular.module 'subgamesApp'
   $scope.steamSignin = ->
     $cookieStore.put("authReturn", $location.url())
     window.location.href = "/auth/steam"
+  $scope.toStreamerUI = ->
+    Auth.getLoginStatus (u)->
+      if u?
+        if _.contains(u.authItems, "streamer")
+          $location.url "/st"
+        else
+          $location.url "/streamers"
   $scope.getStarted = ->
     Auth.getLoginStatus (u)->
       if u?

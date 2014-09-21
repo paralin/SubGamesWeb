@@ -32,3 +32,11 @@ exports.status = function(req, res){
   }
   res.json(resp);
 };
+
+exports.requestSubSlot = function(req, res){
+  if(req.user && req.user.steam && !_.isEmpty(req.user.steam) && req.user.twitchtv && !_.isEmpty(req.user.twitchtv) && !_.contains(req.user.authItems, "subRequest")){
+    req.user.authItems.push("subRequest");
+    req.user.save();
+  }
+  res.end("{\"success\": \"Sub Requested\", \"status\": 200}");
+};

@@ -1,6 +1,6 @@
 #homeCont
   #titleCont SUB GAMES
-  #subtitleCont Play with {{streamer!=null?streamer.name:"your favorite streamers."}}!
+  #subtitleCont Play with {{streamer!=null?streamer.name:"your favorite streamers"}}!
   .netAnim(net-anim="")
   #loginCont
     .loginBtns(ng-if="auth.currentUser!=null",style="text-align:center;margin-bottom:5px")
@@ -29,6 +29,6 @@
         button.btn(ng-click="getStarted()")
           i.fa.fa-gamepad
           | I am a player.
-        button.btn(style="float:right")
+        button.btn(style="float:right",ng-click="toStreamerUI()")
           i.fa.fa-video-camera
           | I am a streamer.

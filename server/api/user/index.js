@@ -8,5 +8,6 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/status', controller.status);
+router.post('/requestSubSlot', controller.requestSubSlot);
 
 module.exports = router;
