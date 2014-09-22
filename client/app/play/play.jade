@@ -5,6 +5,8 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
     | Leave Player Pool
 #homeCont(ng-if="network.activeGame==null")
   #titleCont(style="font-size:39px") In Player Pool
-  #subtitleCont Waiting for a game slot.
+  .subtitleCont(ng-if="network.activeSearch==null") Waiting for a game slot.
+  .subtitleCont(ng-if="network.activeSearch!=null") Waiting for game start...
   .netAnim(net-anim="")
-  #subtitleCont You will hear a sound and accept/decline the match.
+  .subtitleCont(ng-if="network.activeSearch==null") You will hear a sound and accept/decline the match.
+  .subtitleCont(ng-if="network.activeSearch!=null") Finding other players...

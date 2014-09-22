@@ -1,5 +1,7 @@
 'use strict'
 
+foundSound = new buzz.sound "/assets/sounds/match_ready.wav"
+
 angular.module 'subgamesApp'
 .controller 'PlayCtrl', ($scope, Network, $rootScope, $location, $stateParams, safeApply, Auth, Streamer) ->
   c=[]
@@ -35,6 +37,21 @@ angular.module 'subgamesApp'
   c.push $rootScope.$on "clearStream", ->
     safeApply $rootScope, ->
       $location.url "/l"
+  queried = false
+  c.push $rootScope.$on "searchSnapshot", ->
+    idx = _.findIndex Network.activeSearch.PotentialPlayers, {SteamID: Auth.currentUser.steam.steamid}
+    return if queried || idx is -1
+    queried = true
+    foundSound.play()
+    bootbox.confirm "You have been selected for the next game, do you accept?", (c)->
+      if c
+        Network.play.do.acceptMatch(true)
+      else
+        Network.play.do.acceptMatch(false)
+    return
+  c.push $rootScope.$on "clearSearch", ->
+    queried = false
+    return
   $scope.$on "$destroy", ->
     if !Network.disconnected
       Network.play.do.unregisterStream()

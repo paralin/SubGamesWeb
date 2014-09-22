@@ -74,6 +74,8 @@ class NetworkService
             cb ok if cb?
       unregisterStream: (serv)->
         @invoke("deregisterStream")
+      acceptMatch: (serv, acc)->
+        @invoke "acceptmatch", {accepted: acc}
 
   handlers: 
     stream:
