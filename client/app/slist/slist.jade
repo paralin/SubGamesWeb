@@ -14,6 +14,8 @@ div(connectoverlay="{{showOverlay()}}", message="{{overlayMessage()}}")
           tr(ng-repeat="strm in network.streamers",style="cursor:pointer",ng-click="selectStreamer(strm)")
             td(style="width: 50px")
               img(ng-src="{{strm.icon}}",style="width:50px;height:50px")
+            td(style="width: 50px")
+              img(ng-src="{{GameTypeL[strm.game]}}",style="width:50px;height:50px")
             td {{strm.fullname}}
             td {{strm.descrip}}
 #homeCont(ng-if="network.streamers.length==0")

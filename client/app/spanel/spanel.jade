@@ -1,0 +1,38 @@
+div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
+.container-fluid(style="width: 100%;height: 100%")
+  .row
+    .col-md-4.center-block.page-title(style="font-size:50px")
+        | Streamer Panel
+  .row(ng-if="network.activeGame==null")
+    .col-sm-2.tile(style="padding:20px")
+      .tileTitle Pool Setup
+      p Note: these options not implemented yet.
+      form(role="form")
+        .checkbox
+          label
+          input#reqFollow(type="checkbox", name="requireFollow")
+          | Require follow
+        .checkbox
+          label
+          input#reqSub(type="checkbox", name="requireSubscribe")
+          | Require subscribe
+        button.btn.btn-success(ng-if="network.activeStream==null",ng-click="openPool()") Open Pool
+        button.btn.btn-danger(ng-if="network.activeStream!=null",ng-click="closePool()") Close Pool
+    .col-sm-2.tile(style="padding:20px",ng-if="network.activeStream!=null&&network.activeGame==null")
+      .tileTitle Games
+      p
+        b Player Count: 
+        | {{network.activePlayerCount}}
+      p(ng-if="network.activeSearch!=null")
+        b Found Players: 
+        | {{network.activeSearch.Players.length}}
+      p(ng-if="network.activeSearch!=null")
+        b Waiting for Confirm: 
+        | {{network.activeSearch.PotentialPlayers.length}}
+      p(ng-if="network.activeSearch!=null",ng-repeat="plyr in network.activeSearch.Players")
+        b -> 
+        | {{plyr.Name}}
+      button.btn.btn-success(ng-if="network.activeSearch==null",ng-click="findGame()") Start a Game
+      button.btn.btn-danger(ng-if="network.activeSearch!=null",ng-click="cancelGame()") Cancel Game
+    .col-sm-2.tile(style="padding:20px",ng-if="network.activeGame!=null")
+      .tileTitle Active Game

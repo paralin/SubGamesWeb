@@ -84,3 +84,11 @@ angular.module 'subgamesApp', [
     STARTGAME: 0
     CAPTAINS: 1
   $rootScope.MatchTypeK = _.invert $rootScope.MatchType
+  $rootScope.GameType =
+    DOTA: 0
+  $rootScope.GameTypeK = _.invert $rootScope.GameType
+  $rootScope.GameTypeN =
+    0: "Dota 2"
+  $rootScope.GameTypeNK = _.invert $rootScope.GameTypeN
+  $rootScope.GameTypeL =
+    0: "http://i.imgur.com/rlx1Kb2.png"

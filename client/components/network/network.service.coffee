@@ -10,6 +10,8 @@ class NetworkService
   streamers: []
   activeStream: null
   activeGame: null
+  activeSearch: null
+  activePlayerCount: 0
 
   constructor: (@scope, @timeout, @safeApply)->
   disconnect: ->
@@ -38,6 +40,21 @@ class NetworkService
       console.log "Not reconnecting."
 
   methods:
+    stream:
+      unregister: (serv)->
+        @invoke "unregister"
+      startUpdatePool: (serv, requireFollow, requireSubscribe)->
+        @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe}).then (err)->
+          return if !err?
+          new PNotify
+            title: "Start Error"
+            text: err
+            type: "error"
+          return
+      startGame: (serv, playerCount)->
+        @invoke("startsearch", {PlayerCount: playerCount})
+      cancelGame: (serv)->
+        @invoke "stopsearch"
     play:
       checkAuth: (serv)->
         @invoke("checkauth").then (items)=>
@@ -46,7 +63,6 @@ class NetworkService
               serv.scope.$broadcast "invalidAuth"
               serv.disconnect()
       fetchStreamers: (serv, cb)->
-        console.log arguments
         @invoke("getactivestreams").then (streams)=>
           serv.safeApply serv.scope, ->
             serv.streamers = streams
@@ -60,8 +76,33 @@ class NetworkService
         @invoke("deregisterStream")
 
   handlers: 
+    stream:
+      clearstream: ->
+        @activeStream = null
+        @scope.$broadcast "clearStream"
+        @activePlayerCount = 0
+      streamsnapshot: (snp)->
+        @activeStream = snp
+        @scope.$broadcast "streamSnapshot", snp
+      playercountupd: (upd)->
+        @activePlayerCount = upd.Players
+      searchsnapshot: (snp)->
+        @activeSearch = snp
+        @scope.$broadcast "searchSnapshot", snp
+      clearsearch: ->
+        @activeSearch = null
+        @scope.$broadcast "clearSearch"
+      gamesnapshot: (snp)->
+        @activeGame = snp
+        @scope.$broadcast "gameSnapshot", snp
+      cleargame: ->
+        @activeGame = null
+        @scope.$broadcast "clearGame"
     play:
       onopen: ->
+        @activeStream = null
+        @activeGame = null
+        @activeSearch = null
         @play.do.checkAuth(@)
       publicstreamupd: (upd)->
         for stream in upd.streams
@@ -81,6 +122,18 @@ class NetworkService
       streamsnapshot: (snp)->
         @activeStream = snp
         @scope.$broadcast "streamSnapshot", snp
+      gamesnapshot: (snp)->
+        @activeGame = snp
+        @scope.$broadcast "gameSnapshot", snp
+      cleargame: ->
+        @activeGame = null
+        @scope.$broadcast "clearGame"
+      searchsnapshot: (snp)->
+        @activeSearch = snp
+        @scope.$broadcast "searchSnapshot", snp
+      clearsearch: ->
+        @activeSearch = null
+        @scope.$broadcast "clearSearch"
 
   callWhenOpen: (name, cb)->
     cont = @[name]
@@ -141,6 +194,8 @@ class NetworkService
                   cb.call serv, arg
             else
               cont[cbn] = (arg)->
+                console.log cbn
+                console.log arg
                 safeApply scope, -> 
                   cb.call serv, arg
       for name, cbs of @methods
