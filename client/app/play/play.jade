@@ -3,10 +3,15 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
   button.btn(ng-click="goToLink()")
     i.fa.fa-remove
     | Leave Player Pool
-#homeCont(ng-if="network.activeGame==null")
+#homeCont
   #titleCont(style="font-size:39px") In Player Pool
-  .subtitleCont(ng-if="network.activeSearch==null") Waiting for a game slot.
-  .subtitleCont(ng-if="network.activeSearch!=null") Waiting for game start...
+  .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null") Waiting for a game slot.
+  .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Waiting for game start...
+  .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Waiting for game start...
+  .subtitleCont(ng-if="network.activeGame != null") Setting up the game...
   .netAnim(net-anim="")
-  .subtitleCont(ng-if="network.activeSearch==null") You will hear a sound and accept/decline the match.
-  .subtitleCont(ng-if="network.activeSearch!=null") Finding other players...
+  .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null") You will hear a sound and accept/decline the match.
+  .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Finding other players...
+  .subtitleCont(ng-if="network.activeGame!=null") 
+    | Lobby password: 
+    b {{network.activeGame.Password}}
