@@ -92,3 +92,14 @@ angular.module 'subgamesApp', [
   $rootScope.GameTypeNK = _.invert $rootScope.GameTypeN
   $rootScope.GameTypeL =
     0: "http://i.imgur.com/rlx1Kb2.png"
+  $rootScope.SetupStatus =
+    QUEUE: 0
+    INIT: 1
+    WAIT: 2
+    PLAY: 3
+  $rootScope.SetupStatusK = _.invert $rootScope.SetupStatus
+  $rootScope.SetupStatusN =
+    0: "Waiting for a lobby bot..."
+    1: "Bot is setting up the lobby..."
+    2: "Waiting for players to join..."
+    3: "Game is in progress."
