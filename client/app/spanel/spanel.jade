@@ -4,7 +4,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
     .col-md-4.center-block.page-title(style="font-size:50px")
         | Streamer Panel
   .row
-    .col-sm-2.tile(style="padding:20px")
+    .col-sm-4.tile(style="padding:20px")
       .tileTitle Pool Setup
       p
         b Player Count: 
@@ -20,17 +20,21 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           input#reqSub(type="checkbox", name="requireSubscribe")
           | Require subscribe
         button.btn.btn-success(ng-if="network.activeStream==null",ng-click="openPool()") Open Pool
-        button.btn.btn-danger(ng-if="network.activeStream!=null",ng-click="closePool()") Close Pool
-    .col-sm-2.tile(style="padding:20px",ng-if="network.activeStream!=null&&network.activeGame==null")
+        button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame==null",ng-click="closePool()") Close Pool
+        button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame!=null",ng-click="closePool()") Close Pool & Cancel Game
+    .col-sm-2.tile(style="padding:20px",ng-if="network.activeStream!=null")
       .tileTitle Games
       p(ng-if="network.activeSearch!=null")
         b Found Players: 
         | {{allPlayers({IsHost: false}).length}}
       p(ng-if="network.activeSearch!=null")
+        b Finding for Next: 
+        | {{network.activeSearch.PlayerCount}}
+      p(ng-if="network.activeSearch!=null")
         b Sel & Pending: 
         | {{network.activeSearch.PotentialPlayers.length}}
-      button.btn.btn-success(ng-if="network.activeSearch==null",ng-click="findGame()") Start a Game
-      button.btn.btn-danger(ng-if="network.activeSearch!=null",ng-click="cancelGame()") Cancel Game
+      button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null",ng-click="findGame()") Start a Game
+      button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
   .row(ng-if="network.activeGame != null || network.activeSearch != null")
     .col-md-5.tile(style="padding:20px")
       .tileTitle Radiant
@@ -46,8 +50,8 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
               | {{player.Name}}
             td.playerRow
               i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential")
-              i.fa.fa-chevron-right
-              i.fa.fa-ban(ng-if="!player.IsHost")
+              i.fa.fa-chevron-right(ng-if="network.activeGame==null",ng-click="swapPlayer(player)")
+              i.fa.fa-ban(ng-if="!player.IsHost&&network.activeSearch!=null",ng-click="kickPlayer(player)")
     .col-md-5.tile(style="padding:20px")
       .tileTitle Dire
       table.table.table-striped
@@ -61,8 +65,13 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
               i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential")
               | {{player.Name}}
             td.playerRow
-              i.fa.fa-chevron-left
-              i.fa.fa-ban(ng-if="!player.IsHost")
+              i.fa.fa-chevron-left(ng-if="network.activeGame==null",ng-click="swapPlayer(player)")
+              i.fa.fa-ban(ng-if="!player.IsHost&&network.activeSearch!=null",ng-click="kickPlayer(player)")
     .col-md-10.arrangeTeams(ng-if="network.activeSearch != null")
       p Arrange the teams. When ready, the bot will set up the lobby.
-      button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount") Confirm Teams
+      button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="confirmTeams()") Confirm Teams
+    .col-md-10.arrangeTeams(ng-if="network.activeGame != null")
+      p {{SetupStatusN[network.activeGame.Status]}}
+      p(style="font-family:'audimatregular'")
+        | Lobby password: 
+        b(style="font-family:'audimatbold'") {{network.activeGame.Password}}

@@ -43,6 +43,12 @@ class NetworkService
     stream:
       unregister: (serv)->
         @invoke "unregister"
+      swapPlayer: (serv, steamId)->
+        @invoke "swapplayer", {SteamID: steamId}
+      kickPlayer: (serv, steamId)->
+        @invoke "kickplayer", {SteamID: steamId}
+      confirmTeams: (serv)->
+        @invoke "confirmteams"
       startUpdatePool: (serv, requireFollow, requireSubscribe)->
         @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe}).then (err)->
           return if !err?
@@ -106,6 +112,8 @@ class NetworkService
         @activeGame = null
         @activeSearch = null
         @play.do.checkAuth(@)
+      onkicked: ->
+        bootbox.alert "You were kicked from the game by the streamer. Sorry!"
       publicstreamupd: (upd)->
         for stream in upd.streams
           strm = _.findIndex @streamers, {Id: stream.Id}

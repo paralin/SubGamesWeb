@@ -49,6 +49,12 @@ angular.module 'subgamesApp'
       return []
     j = _.filter j, query if query?
     j
+  $scope.swapPlayer = (player)->
+    Network.stream.do.swapPlayer player.SteamID
+  $scope.kickPlayer = (player)->
+    Network.stream.do.kickPlayer player.SteamID
+  $scope.confirmTeams = ->
+    Network.stream.do.confirmTeams()
   $scope.cancelGame = ->
     Network.stream.do.cancelGame()
   $scope.$on "$destroy", ->
