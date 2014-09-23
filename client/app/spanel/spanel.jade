@@ -3,9 +3,12 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
   .row
     .col-md-4.center-block.page-title(style="font-size:50px")
         | Streamer Panel
-  .row(ng-if="network.activeGame==null")
+  .row
     .col-sm-2.tile(style="padding:20px")
       .tileTitle Pool Setup
+      p
+        b Player Count: 
+        | {{network.activePlayerCount}}
       p Note: these options not implemented yet.
       form(role="form")
         .checkbox
@@ -20,19 +23,46 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         button.btn.btn-danger(ng-if="network.activeStream!=null",ng-click="closePool()") Close Pool
     .col-sm-2.tile(style="padding:20px",ng-if="network.activeStream!=null&&network.activeGame==null")
       .tileTitle Games
-      p
-        b Player Count: 
-        | {{network.activePlayerCount}}
       p(ng-if="network.activeSearch!=null")
         b Found Players: 
-        | {{network.activeSearch.Players.length}}
+        | {{allPlayers({IsHost: false}).length}}
       p(ng-if="network.activeSearch!=null")
-        b Waiting for Confirm: 
+        b Sel & Pending: 
         | {{network.activeSearch.PotentialPlayers.length}}
-      p(ng-if="network.activeSearch!=null",ng-repeat="plyr in network.activeSearch.Players")
-        b -> 
-        | {{plyr.Name}}
       button.btn.btn-success(ng-if="network.activeSearch==null",ng-click="findGame()") Start a Game
       button.btn.btn-danger(ng-if="network.activeSearch!=null",ng-click="cancelGame()") Cancel Game
-    .col-sm-2.tile(style="padding:20px",ng-if="network.activeGame!=null")
-      .tileTitle Active Game
+  .row(ng-if="network.activeGame != null || network.activeSearch != null")
+    .col-md-5.tile(style="padding:20px")
+      .tileTitle Radiant
+      table.table.table-striped
+        thead
+          tr.playerRow
+            th.playerRow Name
+            th.playerRow(style="width: 60px") Actions
+        tbody
+          tr(ng-repeat="player in allPlayers({Team: 0})")
+            td.playerRow 
+              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential")
+              | {{player.Name}}
+            td.playerRow
+              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential")
+              i.fa.fa-chevron-right
+              i.fa.fa-ban(ng-if="!player.IsHost")
+    .col-md-5.tile(style="padding:20px")
+      .tileTitle Dire
+      table.table.table-striped
+        thead
+          tr.playerRow
+            th.playerRow Name
+            th.playerRow(style="width: 60px") Actions
+        tbody
+          tr(ng-repeat="player in allPlayers({Team: 1})")
+            td.playerRow 
+              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential")
+              | {{player.Name}}
+            td.playerRow
+              i.fa.fa-chevron-left
+              i.fa.fa-ban(ng-if="!player.IsHost")
+    .col-md-10.arrangeTeams(ng-if="network.activeSearch != null")
+      p Arrange the teams. When ready, the bot will set up the lobby.
+      button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount") Confirm Teams

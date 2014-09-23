@@ -2,6 +2,7 @@
 
 angular.module 'subgamesApp'
 .controller 'SpanelCtrl', ($scope, Network, Auth, safeApply, $location, $rootScope) ->
+  window.scope = $scope
   c = []
   Auth.getLoginStatus (u)->
     if !u? || !_.contains u.authItems, "streamer"
@@ -38,6 +39,16 @@ angular.module 'subgamesApp'
             count = 1 if count < 1
             Network.stream.do.startGame(count)
     return
+  $scope.allPlayers = (query)->
+    j = null
+    if Network.activeGame?
+      j = Network.activeGame.Players
+    else if Network.activeSearch?
+      j = _.union Network.activeSearch.Players, Network.activeSearch.PotentialPlayers
+    else
+      return []
+    j = _.filter j, query if query?
+    j
   $scope.cancelGame = ->
     Network.stream.do.cancelGame()
   $scope.$on "$destroy", ->
