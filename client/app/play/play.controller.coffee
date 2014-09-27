@@ -13,6 +13,18 @@ angular.module 'subgamesApp'
       return "Connecting to the network..."
     else
       return "Joining #{$stateParams.streamer}'s pool..."
+  $scope.getTeam = ->
+    return -1 if !Network.activeGame?
+    plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
+    if plyr?
+      return plyr.Team
+    else return -1
+  $scope.getReady = ->
+    return false if !Network.activeGame?
+    plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
+    if plyr?
+      return plyr.Ready
+    return false
   $scope.showOverlay = ->
     Network.disconnected or !Network.activeStream?
   if $stateParams.streamer?

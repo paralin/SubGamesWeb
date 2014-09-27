@@ -14,3 +14,8 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
   .subtitleCont(ng-if="network.activeGame!=null&&network.activeGame.Details.Status>=3") 
     | Lobby password: 
     b {{network.activeGame.Details.Password}}
+    i.fa.fa-exclamation(ng-if="!getReady()")
+    i.fa.fa-check(ng-if="getReady()")
+    | Join team: 
+    b(style="color:red",ng-if="getTeam()==1") Dire
+    b(style="color:green",ng-if="getTeam()==0") Radiant
