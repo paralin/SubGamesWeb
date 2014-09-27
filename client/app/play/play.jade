@@ -6,7 +6,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
 #homeCont
   .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeSearch==null") In Player Pool
   .titleCont(style="font-size:39px",ng-if="network.activeGame!=null") In Game
-  .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeSearch!=null") Waiting for Start
+  .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeSearch!=null") In Next Game
   .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null") Waiting for a game slot.
   .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Waiting for game start...
   .subtitleCont(ng-if="network.activeGame != null") {{SetupStatusN[network.activeGame.Details.Status]}}
