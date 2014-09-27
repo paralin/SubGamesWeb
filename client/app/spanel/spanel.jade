@@ -34,15 +34,6 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         div(style="width: 100%;margin-bottom:15px")
           | Player count: 
           input(type="number", name="playerCount", ng-model="playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
-      p(ng-if="network.activeSearch!=null")
-        b Found Players: 
-        | {{allPlayers({IsHost: false}).length}}
-      p(ng-if="network.activeSearch!=null")
-        b Finding for Next: 
-        | {{network.activeSearch.PlayerCount}}
-      p(ng-if="network.activeSearch!=null")
-        b Sel & Pending: 
-        | {{network.activeSearch.PotentialPlayers.length}}
       button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null",ng-click="findGame()") Start a Game
       button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
   .row(ng-if="network.activeGame != null || network.activeSearch != null")
