@@ -82,6 +82,11 @@ angular.module 'subgamesApp', [
     19: "TI4 Event"
     20: "Deathmatch"
     #21: "Solo Mid"
+  $rootScope.GameModeNA = []
+  for id, name of $rootScope.GameModeN
+    $rootScope.GameModeNA.push
+      id: id
+      name: name
   $rootScope.GameModeNK = _.invert $rootScope.MatchTypeN
   $rootScope.MatchType =
     STARTGAME: 0

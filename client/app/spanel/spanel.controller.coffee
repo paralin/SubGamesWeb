@@ -14,10 +14,11 @@ angular.module 'subgamesApp'
       $location.url "/l"
   $scope.network = Network
   $scope.selectedGame = $rootScope.GameTypeSel[0]
+  $scope.selectedGameMode = $rootScope.GameModeNA[0]
   $scope.closePool = ->
     Network.stream.do.unregister()
   $scope.openPool = ->
-    Network.stream.do.startUpdatePool($scope.reqFollow, $scope.reqSub, $scope.selectedGame.id)
+    Network.stream.do.startUpdatePool($scope.reqFollow, $scope.reqSub, $scope.selectedGame.id, $scope.selectedGameMode.id)
   $scope.overlayMessage = ->
     "Connecting to the network..."
   $scope.showOverlay = ->

@@ -51,8 +51,8 @@ class NetworkService
         @invoke "confirmteams"
       finalizeGame: (serv)->
         @invoke "finalizegame"
-      startUpdatePool: (serv, requireFollow, requireSubscribe, gameId)->
-        @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe, gameId: gameId}).then (err)->
+      startUpdatePool: (serv, requireFollow, requireSubscribe, gameId, gameMode)->
+        @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe, gameId: gameId, gameMode: gameMode}).then (err)->
           return if !err?
           new PNotify
             title: "Start Error"

@@ -13,6 +13,10 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         ui-select-match(placeholder="Select a game...") {{$select.selected.name}}
         ui-select-choices(repeat="game in GameTypeSel")
           div(ng-bind-html="game.name")
+      ui-select(ng-model="$parent.selectedGameMode", theme="selectize", ng-disabled="network.activeStream!=null", style="min-width: 300px;", ng-if="selectedGame.id==0")
+        ui-select-match(placeholder="Select a mode...") {{$select.selected.name}}
+        ui-select-choices(repeat="game in GameModeNA")
+          div(ng-bind-html="game.name")
       p Note: these options not implemented yet.
       form(role="form")
         .checkbox
