@@ -9,10 +9,10 @@
  */
 
 .browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
 }
 
 .fa {
@@ -28,6 +28,23 @@
   float:none;
   text-align:center;
   font-family: 'audimatbold';
+}
+
+.selectize-control {
+  /* Align Selectize with input-group-btn */
+  top: 2px;
+
+}
+
+.selectize-control > .selectize-dropdown {
+  top: 34px;
+
+}
+
+/* Reset right rounded corners, see Bootstrap input-groups.less */
+.input-group > .selectize-control > .selectize-input {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
 }
 
 // injector

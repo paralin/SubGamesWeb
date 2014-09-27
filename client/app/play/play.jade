@@ -7,10 +7,10 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
   #titleCont(style="font-size:39px") In Player Pool
   .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null") Waiting for a game slot.
   .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Waiting for game start...
-  .subtitleCont(ng-if="network.activeGame != null") {{SetupStatusN[network.activeGame.Status]}}
+  .subtitleCont(ng-if="network.activeGame != null") {{SetupStatusN[network.activeGame.Details.Status]}}
   .netAnim(net-anim="")
   .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null") You will hear a sound and accept/decline the match.
   .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Finding other players...
-  .subtitleCont(ng-if="network.activeGame!=null") 
+  .subtitleCont(ng-if="network.activeGame!=null&&network.activeGame.Details.Status>=3") 
     | Lobby password: 
-    b {{network.activeGame.Password}}
+    b {{network.activeGame.Details.Password}}

@@ -39,7 +39,7 @@ angular.module 'subgamesApp'
       $location.url "/l"
   queried = false
   c.push $rootScope.$on "searchSnapshot", ->
-    idx = _.findIndex Network.activeSearch.PotentialPlayers, {SteamID: Auth.currentUser.steam.steamid}
+    idx = _.findIndex Network.activeSearch.PotentialPlayers, {SID: Auth.currentUser.steam.steamid}
     return if queried || idx is -1
     queried = true
     foundSound.play()

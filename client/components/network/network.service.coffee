@@ -49,8 +49,10 @@ class NetworkService
         @invoke "kickplayer", {SteamID: steamId}
       confirmTeams: (serv)->
         @invoke "confirmteams"
-      startUpdatePool: (serv, requireFollow, requireSubscribe)->
-        @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe}).then (err)->
+      finalizeGame: (serv)->
+        @invoke "finalizegame"
+      startUpdatePool: (serv, requireFollow, requireSubscribe, gameId)->
+        @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe, gameId: gameId}).then (err)->
           return if !err?
           new PNotify
             title: "Start Error"
@@ -100,10 +102,10 @@ class NetworkService
       clearsearch: ->
         @activeSearch = null
         @scope.$broadcast "clearSearch"
-      gamesnapshot: (snp)->
+      setupsnapshot: (snp)->
         @activeGame = snp
         @scope.$broadcast "gameSnapshot", snp
-      cleargame: ->
+      clearsetup: ->
         @activeGame = null
         @scope.$broadcast "clearGame"
     play:
@@ -132,10 +134,10 @@ class NetworkService
       streamsnapshot: (snp)->
         @activeStream = snp
         @scope.$broadcast "streamSnapshot", snp
-      gamesnapshot: (snp)->
+      setupsnapshot: (snp)->
         @activeGame = snp
         @scope.$broadcast "gameSnapshot", snp
-      cleargame: ->
+      clearsetup: ->
         @activeGame = null
         @scope.$broadcast "clearGame"
       searchsnapshot: (snp)->

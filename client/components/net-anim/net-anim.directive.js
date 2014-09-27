@@ -4,8 +4,8 @@ angular.module('subgamesApp').directive('netAnim', function($interval) {
     templateUrl: 'components/net-anim/net-anim.html',
     restrict: 'EA',
     link: function(scope, element, attrs) {
-      var viewWidth = 350,
-      viewHeight = 350,
+      var viewWidth = 500,
+      viewHeight = 500,
       drawingCanvas = element.find("canvas")[0],
       ctx,
       transInt,

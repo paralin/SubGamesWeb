@@ -13,10 +13,11 @@ angular.module 'subgamesApp'
     safeApply $rootScope, ->
       $location.url "/l"
   $scope.network = Network
+  $scope.selectedGame = $rootScope.GameTypeSel[0]
   $scope.closePool = ->
     Network.stream.do.unregister()
   $scope.openPool = ->
-    Network.stream.do.startUpdatePool($("#reqFollow").is(":checked"), $("#reqSub").is(":checked"))
+    Network.stream.do.startUpdatePool($scope.reqFollow, $scope.reqSub, $scope.selectedGame.id)
   $scope.overlayMessage = ->
     "Connecting to the network..."
   $scope.showOverlay = ->
@@ -42,7 +43,7 @@ angular.module 'subgamesApp'
   $scope.allPlayers = (query)->
     j = null
     if Network.activeGame?
-      j = Network.activeGame.Players
+      j = Network.activeGame.Details.Players
     else if Network.activeSearch?
       j = _.union Network.activeSearch.Players, Network.activeSearch.PotentialPlayers
     else
@@ -50,13 +51,20 @@ angular.module 'subgamesApp'
     j = _.filter j, query if query?
     j
   $scope.swapPlayer = (player)->
-    Network.stream.do.swapPlayer player.SteamID
+    Network.stream.do.swapPlayer player.SID
   $scope.kickPlayer = (player)->
-    Network.stream.do.kickPlayer player.SteamID
+    Network.stream.do.kickPlayer player.SID
   $scope.confirmTeams = ->
     Network.stream.do.confirmTeams()
   $scope.cancelGame = ->
     Network.stream.do.cancelGame()
+  $scope.finalizeGame = ->
+    Network.stream.do.finalizeGame()
+  $scope.allReady = ->
+    return false if !Network.activeGame
+    for plyr in Network.activeGame.Details.Players
+      return false if !plyr.Ready
+    return true
   $scope.$on "$destroy", ->
     if !Network.disconnected
       Network.stream.do.unregister()

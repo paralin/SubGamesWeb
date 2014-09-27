@@ -1,13 +1,16 @@
 'use strict'
 
 angular.module 'subgamesApp', [
-  'ngResource',
-  'ngSanitize',
-  'ngCookies',
-  'ui.router',
+  'ngResource'
+  'ngSanitize'
+  'ngCookies'
+  'ui.router'
   'ui.bootstrap'
+  'ui.select'
 ]
-.config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
+.config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, uiSelectConfig) ->
+  uiSelectConfig.theme = 'selectize'
+
   $urlRouterProvider
   .otherwise '/l'
 
@@ -89,17 +92,23 @@ angular.module 'subgamesApp', [
   $rootScope.GameTypeK = _.invert $rootScope.GameType
   $rootScope.GameTypeN =
     0: "Dota 2"
+  $rootScope.GameTypeNA = _.values $rootScope.GameTypeN
   $rootScope.GameTypeNK = _.invert $rootScope.GameTypeN
+  $rootScope.GameTypeSel = [
+    {name: "Dota 2", id: 0}
+  ]
   $rootScope.GameTypeL =
     0: "http://i.imgur.com/rlx1Kb2.png"
   $rootScope.SetupStatus =
     QUEUE: 0
-    INIT: 1
-    WAIT: 2
-    PLAY: 3
+    QUEUEHOST: 1
+    INIT: 2
+    WAIT: 3
+    READY: 4
   $rootScope.SetupStatusK = _.invert $rootScope.SetupStatus
   $rootScope.SetupStatusN =
     0: "Waiting for a lobby bot..."
-    1: "Bot is setting up the lobby..."
-    2: "Waiting for players to join..."
-    3: "Game is in progress."
+    1: "Waiting for a bot host..."
+    2: "Bot is setting up the lobby..."
+    3: "Waiting for players to join..."
+    4: "Game is in progress."
