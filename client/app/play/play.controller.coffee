@@ -14,6 +14,7 @@ angular.module 'subgamesApp'
       return "Connecting to the network..."
     else
       return $scope.joinStatus
+  $scope.playerCount = 9
   $scope.getTeam = ->
     return -1 if !Network.activeGame?
     plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}

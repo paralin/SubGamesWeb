@@ -33,7 +33,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           | Require subscribe
         div(style="width: 100%;margin-bottom:15px")
           | Player count: 
-          input(type="number", name="playerCount", ng-model="playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min=1, max=9, value=9, style="width: 40px")
+          input(type="number", name="playerCount", ng-model="playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
       p(ng-if="network.activeSearch!=null")
         b Found Players: 
         | {{allPlayers({IsHost: false}).length}}
