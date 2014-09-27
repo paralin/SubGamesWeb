@@ -51,16 +51,16 @@ class NetworkService
         @invoke "confirmteams"
       finalizeGame: (serv)->
         @invoke "finalizegame"
-      startUpdatePool: (serv, requireFollow, requireSubscribe, gameId, gameMode)->
-        @invoke("startupdatepool", {requireFollow: requireFollow, requireSubscribe: requireSubscribe, gameId: gameId, gameMode: gameMode}).then (err)->
+      startUpdatePool: (serv, gameId )->
+        @invoke("startupdatepool", {gameId: gameId}).then (err)->
           return if !err?
           new PNotify
             title: "Start Error"
             text: err
             type: "error"
           return
-      startGame: (serv, playerCount)->
-        @invoke("startsearch", {PlayerCount: playerCount})
+      startGame: (serv, playerCount, reqFollow, reqSub, gameMode)->
+        @invoke("startsearch", {PlayerCount: playerCount, RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode})
       cancelGame: (serv)->
         @invoke "stopsearch"
     play:
@@ -70,6 +70,24 @@ class NetworkService
             if !_.contains items, "play"
               serv.scope.$broadcast "invalidAuth"
               serv.disconnect()
+      getPerms: (serv, id, cb)->
+        @invoke("getperms", {Id: id}).then (perms)=>
+          serv.safeApply serv.scope, ->
+            cb perms
+      fetchPerms: (serv, id, cb)->
+        @invoke("fetchperms", {Id: id}).then (err)=>
+          serv.safeApply serv.scope, ->
+            if !err?
+              cb true
+            else
+              if err is "AUTHFAIL"
+                cb false
+              else
+                new PNotify
+                  title: "Issue Checking Follow/Subscribe"
+                  text: err
+                  type: "error"
+                cb true
       fetchStreamers: (serv, cb)->
         @invoke("getactivestreams").then (streams)=>
           serv.safeApply serv.scope, ->

@@ -3,16 +3,17 @@
 foundSound = new buzz.sound "/assets/sounds/match_ready.wav"
 
 angular.module 'subgamesApp'
-.controller 'PlayCtrl', ($scope, Network, $rootScope, $location, $stateParams, safeApply, Auth, Streamer) ->
+.controller 'PlayCtrl', ($scope, Network, $rootScope, $location, $stateParams, safeApply, Auth, Streamer, $cookieStore) ->
   c=[]
   $scope.network = Network
   $scope.goToLink = ->
     $location.url "/sl"
+  $scope.joinStatus = "Please refresh the page."
   $scope.overlayMessage = ->
     if Network.disconnected
       return "Connecting to the network..."
     else
-      return "Joining #{$stateParams.streamer}'s pool..."
+      return $scope.joinStatus
   $scope.getTeam = ->
     return -1 if !Network.activeGame?
     plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
@@ -31,13 +32,25 @@ angular.module 'subgamesApp'
     Auth.getLoginStatus (u)->
       Network.connect()
       Network.callWhenOpen "play", ->
+        $scope.joinStatus = "Finding stream..."
         Network.play.do.fetchStreamers (streams)->
+          $scope.joinStatus = "Checking Twitch subscriber list..."
           strm = _.find(streams, {name: $stateParams.streamer})
           if !strm?
             $location.url "/sl"
           else
-            Network.play.do.registerWithStream strm.Id, (ok)->
-              $location.url "/sl" if !ok
+            Network.play.do.fetchPerms strm.Id, (ok)->
+              $scope.joinStatus = "Getting your subscriber status..."
+              if !ok
+                $cookieStore.put "authReturn", $location.url()
+                window.location.href = "/auth/twitchtv"
+              else
+                Network.play.do.getPerms strm.Id, (perms)->
+                  $scope.joinStatus = "Joining #{$stateParams.streamer}'s pool...'"
+                  $scope.perms = perms
+                  Network.play.do.registerWithStream strm.Id, (ok)->
+                    $scope.joinStatus = "Please refresh the page."
+                    $location.url "/sl" if !ok
   else
     $location.url "/sl"
   c.push $rootScope.$on "invalidAuth", ->
