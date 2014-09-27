@@ -31,8 +31,9 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           label
           input#reqSub(type="checkbox", name="requireSubscribe", ng-model="reqSub", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
           | Require subscribe
-        | Player count: 
-        input(type="number", name="playerCount", ng-model="playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", value="9", style="width: 40px,margin-bottom:15px")
+        div(style="width: 100%;margin-bottom:15px")
+          | Player count: 
+          input(type="number", name="playerCount", ng-model="playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", value="9", style="width: 40px")
       p(ng-if="network.activeSearch!=null")
         b Found Players: 
         | {{allPlayers({IsHost: false}).length}}
