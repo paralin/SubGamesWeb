@@ -111,6 +111,9 @@ class NetworkService
       clearstream: ->
         @activeStream = null
         @scope.$broadcast "clearStream"
+        @activeGame = null
+        @activeSearch = null
+        @activePerms = null
         @activePlayerCount = 0
         @activeFollowerCount = 0
         @activeSubscriberCount = 0
