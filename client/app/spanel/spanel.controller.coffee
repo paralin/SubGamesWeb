@@ -24,7 +24,7 @@ angular.module 'subgamesApp'
   $scope.showOverlay = ->
     Network.disconnected
   $scope.findGame = ->
-    Network.stream.do.startGame $scope.playerCount, $scope.reqFollow, $scope.reqSub, $scope.selectedGameMode.id
+    Network.stream.do.startGame $scope.gameParams.playerCount, $scope.gameParams.reqFollow, $scope.gameParams.reqSub, $scope.gameParams.selectedGameMode.id
   $scope.allPlayers = (query)->
     j = null
     if Network.activeGame?
@@ -35,7 +35,11 @@ angular.module 'subgamesApp'
       return []
     j = _.filter j, query if query?
     j
-  $scope.playerCount = 9
+  $scope.gameParams = 
+    reqFollow: false
+    reqSub: false
+    selectedGameMode: null
+    playerCount: 9
   $scope.swapPlayer = (player)->
     Network.stream.do.swapPlayer player.SID
   $scope.kickPlayer = (player)->

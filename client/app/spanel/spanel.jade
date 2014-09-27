@@ -6,9 +6,16 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
   .row
     .col-sm-2.tile(style="padding:20px")
       .tileTitle Pool Setup
-      p
-        b Player Count: 
-        | {{network.activePlayerCount}}
+      div(style="width:100%",ng-if="network.activeStream!=null")
+        p
+          b Total: 
+          | {{network.activePlayerCount}}
+        p
+          b Followers: 
+          | {{network.activeFollowerCount}}
+        p
+          b Subscribers: 
+          | {{network.activeSubscriberCount}}
       ui-select(ng-model="$parent.selectedGame", theme="selectize", ng-disabled="network.activeStream!=null", style="margin-bottom:15px")
         ui-select-match(placeholder="Select a game...") {{$select.selected.name}}
         ui-select-choices(repeat="game in GameTypeSel")
@@ -18,22 +25,22 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
       button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame!=null",ng-click="closePool()") Close Pool & Cancel Game
     .col-sm-3.tile(style="padding:20px",ng-if="network.activeStream!=null")
       .tileTitle Games
-      ui-select(ng-model="$parent.selectedGameMode", theme="selectize", ng-disabled="network.activeGame!=null||network.activeSearch!=null", ng-if="selectedGame.id==0")
+      ui-select(ng-model="gameParams.selectedGameMode", theme="selectize", ng-disabled="network.activeGame!=null||network.activeSearch!=null", ng-if="selectedGame.id==0")
         ui-select-match(placeholder="Select a mode...") {{$select.selected.name}}
         ui-select-choices(repeat="game in GameModeNA")
           div(ng-bind-html="game.name")
       form(role="form")
         .checkbox
           label
-          input#reqFollow(type="checkbox", name="requireFollow", ng-model="reqFollow", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
+          input#reqFollow(type="checkbox", name="requireFollow", ng-model="gameParams.reqFollow", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
           | Require follow
         .checkbox
           label
-          input#reqSub(type="checkbox", name="requireSubscribe", ng-model="reqSub", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
+          input#reqSub(type="checkbox", name="requireSubscribe", ng-model="gameParams.reqSub", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
           | Require subscribe
         div(style="width: 100%;margin-bottom:15px")
           | Player count: 
-          input(type="number", name="playerCount", ng-model="playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
+          input(type="number", name="playerCount", ng-model="gameParams.playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
       button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null",ng-click="findGame()") Start a Game
       button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
   .row(ng-if="network.activeGame != null || network.activeSearch != null")

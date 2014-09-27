@@ -8,7 +8,7 @@ angular.module 'subgamesApp'
   $scope.network = Network
   $scope.goToLink = ->
     $location.url "/sl"
-  $scope.joinStatus = "Please refresh the page."
+  $scope.joinStatus = "Connecting..."
   $scope.overlayMessage = ->
     if Network.disconnected
       return "Connecting to the network..."
@@ -35,23 +35,16 @@ angular.module 'subgamesApp'
       Network.callWhenOpen "play", ->
         $scope.joinStatus = "Finding stream..."
         Network.play.do.fetchStreamers (streams)->
-          $scope.joinStatus = "Checking Twitch subscriber list..."
+          $scope.joinStatus = "Joining #{$stateParams.streamer}'s pool...'"
           strm = _.find(streams, {name: $stateParams.streamer})
           if !strm?
             $location.url "/sl"
           else
-            Network.play.do.fetchPerms strm.Id, (ok)->
-              $scope.joinStatus = "Getting your subscriber status..."
-              if !ok
+            Network.play.do.registerWithStream strm.Id, (status)->
+              $location.url "/sl" if status is 1
+              if status is 2
                 $cookieStore.put "authReturn", $location.url()
                 window.location.href = "/auth/twitchtv"
-              else
-                Network.play.do.getPerms strm.Id, (perms)->
-                  $scope.joinStatus = "Joining #{$stateParams.streamer}'s pool...'"
-                  $scope.perms = perms
-                  Network.play.do.registerWithStream strm.Id, (ok)->
-                    $scope.joinStatus = "Please refresh the page."
-                    $location.url "/sl" if !ok
   else
     $location.url "/sl"
   c.push $rootScope.$on "invalidAuth", ->

@@ -11,7 +11,10 @@ class NetworkService
   activeStream: null
   activeGame: null
   activeSearch: null
+  activePerms: null
   activePlayerCount: 0
+  activeFollowerCount: 0
+  activeSubscriberCount: 0
 
   constructor: (@scope, @timeout, @safeApply)->
   disconnect: ->
@@ -94,10 +97,10 @@ class NetworkService
             serv.streamers = streams
             cb(streams)
       registerWithStream: (serv, id, cb)->
-        @invoke("registerwithstream", {id: id}).then (ok)=>
+        @invoke("registerwithstream", {id: id}).then (status)=>
           serv.safeApply serv.scope, ->
-            console.log ok
-            cb ok if cb?
+            console.log status
+            cb status if cb?
       unregisterStream: (serv)->
         @invoke("deregisterStream")
       acceptMatch: (serv, acc)->
@@ -109,11 +112,15 @@ class NetworkService
         @activeStream = null
         @scope.$broadcast "clearStream"
         @activePlayerCount = 0
+        @activeFollowerCount = 0
+        @activeSubscriberCount = 0
       streamsnapshot: (snp)->
         @activeStream = snp
         @scope.$broadcast "streamSnapshot", snp
       playercountupd: (upd)->
         @activePlayerCount = upd.Players
+        @activeFollowerCount = upd.Followers
+        @activeSubscriberCount = upd.Subscribers
       searchsnapshot: (snp)->
         @activeSearch = snp
         @scope.$broadcast "searchSnapshot", snp
@@ -132,6 +139,8 @@ class NetworkService
         @activeGame = null
         @activeSearch = null
         @play.do.checkAuth(@)
+      permssnapshot: (snap)->
+        @activePerms = snap
       onkicked: ->
         bootbox.alert "You were kicked from the game by the streamer. Sorry!"
       publicstreamupd: (upd)->
