@@ -4,7 +4,9 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
     i.fa.fa-remove
     | Leave Player Pool
 #homeCont
-  #titleCont(style="font-size:39px") In Player Pool
+  .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeSearch==null") In Player Pool
+  .titleCont(style="font-size:39px",ng-if="network.activeGame!=null") In Game
+  .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeSearch!=null") Waiting for Start
   .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null") Waiting for a game slot.
   .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null") Waiting for game start...
   .subtitleCont(ng-if="network.activeGame != null") {{SetupStatusN[network.activeGame.Details.Status]}}
@@ -14,6 +16,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
   .subtitleCont(ng-if="network.activeGame!=null&&network.activeGame.Details.Status>=3") 
     | Lobby password: 
     b {{network.activeGame.Details.Password}}
+  .subtitleCont(ng-if="network.activeGame!=null&&network.activeGame.Details.Status>=3",style="margin-top:10px") 
     i.fa.fa-exclamation(ng-if="!getReady()")
     i.fa.fa-check(ng-if="getReady()")
     | Join team: 
