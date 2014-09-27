@@ -13,9 +13,9 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         ui-select-match(placeholder="Select a game...") {{$select.selected.name}}
         ui-select-choices(repeat="game in GameTypeSel")
           div(ng-bind-html="game.name")
-        button.btn.btn-success(ng-if="network.activeStream==null",ng-click="openPool()") Open Pool
-        button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame==null",ng-click="closePool()") Close Pool
-        button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame!=null",ng-click="closePool()") Close Pool & Cancel Game
+      button.btn.btn-success(ng-if="network.activeStream==null",ng-click="openPool()") Open Pool
+      button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame==null",ng-click="closePool()") Close Pool
+      button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame!=null",ng-click="closePool()") Close Pool & Cancel Game
     .col-sm-2.tile(style="padding:20px",ng-if="network.activeStream!=null")
       .tileTitle Games
       ui-select(ng-model="$parent.selectedGameMode", theme="selectize", ng-disabled="network.activeGame!=null||network.activeSearch!=null", style="min-width: 300px;", ng-if="selectedGame.id==0")
