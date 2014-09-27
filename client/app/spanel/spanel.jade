@@ -9,13 +9,13 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
       div(style="width:100%",ng-if="network.activeStream!=null")
         p
           b Total: 
-          | {{network.activePlayerCount}}
+          | {{network.activePlayerCount | number}}
         p
           b Followers: 
-          | {{network.activeFollowerCount}}
+          | {{network.activeFollowerCount | number}}
         p
           b Subscribers: 
-          | {{network.activeSubscriberCount}}
+          | {{network.activeSubscriberCount | number}}
       ui-select(ng-model="$parent.selectedGame", theme="selectize", ng-disabled="network.activeStream!=null", style="margin-bottom:15px")
         ui-select-match(placeholder="Select a game...") {{$select.selected.name}}
         ui-select-choices(repeat="game in GameTypeSel")

@@ -6,6 +6,7 @@ angular.module 'subgamesApp'
 .controller 'PlayCtrl', ($scope, Network, $rootScope, $location, $stateParams, safeApply, Auth, Streamer, $cookieStore) ->
   c=[]
   $scope.network = Network
+  $scope.streamerName = $stateParams.streamer
   $scope.goToLink = ->
     $location.url "/sl"
   $scope.joinStatus = "Connecting..."
@@ -35,7 +36,7 @@ angular.module 'subgamesApp'
       Network.callWhenOpen "play", ->
         $scope.joinStatus = "Finding stream..."
         Network.play.do.fetchStreamers (streams)->
-          $scope.joinStatus = "Joining #{$stateParams.streamer}'s pool...'"
+          $scope.joinStatus = "Joining #{$stateParams.streamer}'s pool..."
           strm = _.find(streams, {name: $stateParams.streamer})
           if !strm?
             $location.url "/sl"

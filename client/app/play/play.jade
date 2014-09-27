@@ -22,3 +22,11 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
     | Join team: 
     b(style="color:red",ng-if="getTeam()==1") Dire
     b(style="color:green",ng-if="getTeam()==0") Radiant
+div(style="position:fixed;bottom:15px;width:100%;height:30px;text-align:center;")
+  | You are 
+  b(ng-if="network.activePerms.IsFollower") a follower 
+  b(ng-if="!network.activePerms.IsFollower") not a follower 
+  | and 
+  b(ng-if="network.activePerms.IsSubscriber") a subscriber 
+  b(ng-if="!network.activePerms.IsSubscriber") not a subscriber 
+  | of {{streamerName}}'s stream.
