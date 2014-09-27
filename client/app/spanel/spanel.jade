@@ -54,7 +54,6 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
               i.fa.fa-check(ng-if="player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3")
               | {{player.Name}}
             td.playerRow
-              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential")
               i.fa.fa-chevron-right(ng-if="network.activeGame==null",ng-click="swapPlayer(player)")
               i.fa.fa-ban(ng-if="!player.IsHost&&(network.activeSearch!=null||(network.activeGame!=null&&network.activeGame.Details.Status==3))",ng-click="kickPlayer(player)")
     .col-md-5.tile(style="padding:20px")
