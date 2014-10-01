@@ -1,8 +1,8 @@
 'use strict'
 
 angular.module 'subgamesApp'
-.directive 'footer', ->
+.directive 'footer', (Network)->
   templateUrl: 'app/footer/footer.html'
   restrict: 'EA'
-  link: (scope, element, attrs, Network) ->
+  link: (scope, element, attrs) ->
     scope.network = Network
