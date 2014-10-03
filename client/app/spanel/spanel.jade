@@ -79,7 +79,6 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
     .col-md-10.arrangeTeams(ng-if="network.activeSearch != null")
       p Arrange the teams. When ready, the bot will set up the lobby.
       button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="confirmTeams()") Confirm Teams
-      button.btn.btn-(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="confirmTeams()") Confirm Teams
       p(ng-if="network.activeSearch.Players.length<=network.activeSearch.PlayerCount")
         i.fa.fa-spin.fa-refresh 
         | Searching for players...
