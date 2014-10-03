@@ -79,7 +79,6 @@ angular.module 'subgamesApp', [
     16: "Captains Draft"
     #17: "Balanced Draft"
     18: "Ability Draft"
-    19: "TI4 Event"
     20: "Deathmatch"
     #21: "Solo Mid"
   $rootScope.GameModeNA = []
