@@ -101,6 +101,19 @@ angular.module 'subgamesApp', [
   $rootScope.GameTypeSel = [
     {name: "Dota 2", id: 0}
   ]
+  $rootScope.RegionSel = [
+    {name: "Auto Region", id: 0}
+    {name: "US West", id: 1}
+    {name: "US East", id: 2}
+    {name: "Europe", id: 3}
+    {name: "Korea", id: 4}
+    {name: "Singapore", id: 5}
+    {name: "Australia", id: 7}
+    {name: "Stockholm", id: 8}
+    {name: "Austria", id: 9}
+    {name: "Brazil", id: 10}
+    {name: "South Africa", id: 11}
+  ]
   $rootScope.GameTypeL =
     0: "http://i.imgur.com/rlx1Kb2.png"
   $rootScope.SetupStatus =
