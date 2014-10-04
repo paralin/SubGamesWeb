@@ -144,6 +144,8 @@ class NetworkService
         @play.do.checkAuth(@)
       permssnapshot: (snap)->
         @activePerms = snap
+      onlobbyready: ->
+        @scope.$broadcast "lobbyReady"
       onkicked: ->
         bootbox.alert "You were kicked from the game by the streamer. Sorry!"
       publicstreamupd: (upd)->

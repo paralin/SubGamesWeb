@@ -1,6 +1,7 @@
 'use strict'
 
 foundSound = new buzz.sound "/assets/sounds/match_ready.wav"
+lobbyReadySound = new buzz.sound "/assets/sounds/ganked_sml_01.mp3"
 
 angular.module 'subgamesApp'
 .controller 'PlayCtrl', ($scope, Network, $rootScope, $location, $stateParams, safeApply, Auth, Streamer, $cookieStore) ->
@@ -54,6 +55,8 @@ angular.module 'subgamesApp'
         $location.url "/l/"+$stateParams.streamer
       else
         $location.url "/l"
+  c.push $rootScope.$on "lobbyReady", ->
+    lobbyReadySound.play()
   c.push $rootScope.$on "clearStream", ->
     safeApply $rootScope, ->
       $location.url "/l"
