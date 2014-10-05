@@ -66,7 +66,7 @@ angular.module 'subgamesApp'
     return if queried || idx is -1
     queried = true
     foundSound.play()
-    swal(
+    window.aswal = swal(
       title: "Selected for Game"
       text: "You have been selected for the next game, do you accept?"
       type: "success"
@@ -75,13 +75,17 @@ angular.module 'subgamesApp'
       cancelButtonText: "Decline"
     , ->
       Network.play.do.acceptMatch(true)
+      window.aswal = null
     , ->
       Network.play.do.acceptMatch(false)
+      window.aswal = null
     )
     return
   c.push $rootScope.$on "clearSearch", ->
     queried = false
     return
+  c.push ->
+    window.aswal() if window.aswal?
   $scope.$on "$destroy", ->
     if !Network.disconnected
       Network.play.do.unregisterStream()
