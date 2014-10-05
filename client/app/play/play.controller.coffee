@@ -66,11 +66,18 @@ angular.module 'subgamesApp'
     return if queried || idx is -1
     queried = true
     foundSound.play()
-    bootbox.confirm "You have been selected for the next game, do you accept?", (c)->
-      if c
-        Network.play.do.acceptMatch(true)
-      else
-        Network.play.do.acceptMatch(false)
+    swal(
+      title: "Selected for Game"
+      text: "You have been selected for the next game, do you accept?"
+      type: "success"
+      showCancelButton: true
+      confirmButtonText: "Accept"
+      cancelButtonText: "Decline"
+    , ->
+      Network.play.do.acceptMatch(true)
+    , ->
+      Network.play.do.acceptMatch(false)
+    )
     return
   c.push $rootScope.$on "clearSearch", ->
     queried = false

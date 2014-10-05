@@ -15,10 +15,10 @@
     "lodash": "~2.4.1",
     "angular-ui-router": "~0.2.10",
     "d3": "~3.4.11",
-    "bootbox": "~4.3.0",
     "buzz": "~1.1.6",
     "selectize": "~0.8.5",
-    "angular-ui-select": "~0.7.0"
+    "angular-ui-select": "~0.7.0",
+    "sweetalert": "paralin/sweetalert#master"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

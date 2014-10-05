@@ -147,7 +147,10 @@ class NetworkService
       onlobbyready: ->
         @scope.$broadcast "lobbyReady"
       onkicked: ->
-        bootbox.alert "You were kicked from the game by the streamer. Sorry!"
+        swal
+          title: "Kicked From Game"
+          text: "You were kicked from the game by the streamer. Sorry!"
+          type: "error"
       publicstreamupd: (upd)->
         for stream in upd.streams
           strm = _.findIndex @streamers, {Id: stream.Id}

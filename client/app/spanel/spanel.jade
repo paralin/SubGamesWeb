@@ -82,7 +82,8 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
               i.fa.fa-ban(ng-if="!player.IsHost&&(network.activeSearch!=null||(network.activeGame!=null&&network.activeGame.Details.Status==3))",ng-click="kickPlayer(player)")
     .col-md-10.arrangeTeams(ng-if="network.activeSearch != null")
       p Arrange the teams. When ready, the bot will set up the lobby.
-      button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="confirmTeams()") Confirm Teams
+      button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="confirmTeams()",style="margin-right:10px;") Confirm Teams
+      //button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="startChallenge()",style="margin-left:10px") Start Challenge
       p(ng-if="network.activeSearch.Players.length<=network.activeSearch.PlayerCount")
         i.fa.fa-spin.fa-refresh 
         | Searching for players...
