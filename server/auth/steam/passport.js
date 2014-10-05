@@ -24,7 +24,7 @@ exports.setup = function (User, config) {
             user.authItems.push("play");
             user.save();
           }
-          if(!_.contains(user.authItems, 'streamer') && _.contains(["76561197961827458", "76561198029304414", "76561197965807298"], user.steam.steamid)){
+          if(!_.contains(user.authItems, 'streamer') && _.contains(["76561197961827458", "76561198029304414", "76561197965807298", "76561197993261133", "76561198030744609"], user.steam.steamid)){
             user.authItems.push("streamer");
             user.save();
           }
