@@ -63,8 +63,8 @@ class NetworkService
             text: err
             type: "error"
           return
-      startParty: (serv, reqFollow, reqSub, gameMode, region)->
-        @invoke("startparty", {RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
+      startParty: (serv, reqFollow, reqSub)->
+        @invoke("startparty", {RequireFollow: reqFollow, RequireSubscribe: reqSub})
       startGame: (serv, playerCount, reqFollow, reqSub, gameMode, region)->
         @invoke("startsearch", {PlayerCount: playerCount, RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
       cancelGame: (serv)->
