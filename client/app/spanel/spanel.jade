@@ -47,6 +47,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           input(type="number", name="playerCount", ng-model="gameParams.playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
       button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null",ng-click="findGame()") Start a Game
       button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
+      button.btn.btn-primary(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="openParty()") Start a Party
   .row(ng-if="network.activeGame != null || network.activeSearch != null")
     .col-md-5.tile(style="padding:20px")
       .tileTitle Radiant
@@ -93,3 +94,20 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         | Lobby password: 
         b(style="font-family:'audimatbold'") {{network.activeGame.Details.Password}}
       button.btn.btn-success(ng-if="network.activeGame.Details.Status==3&&allReady()",ng-click="finalizeGame()") Launch Game
+  .row(ng-if="network.activeParty!=null")
+    .col-md-3.tile(style="padding:20px")
+      .tileTitle Active Party
+      | Suggest invite in the party to add friends.
+      table.table.table-striped
+        thead
+          tr.playerRow
+            th.playerRow Name
+            th.playerRow(style="width: 60px") Actions
+        tbody
+          tr(ng-repeat="player in network.activeParty.Players")
+            td.playerRow 
+              //i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3)")
+              i.fa.fa-check(ng-if="player.InParty&&network.activeParty.Status>2")
+              i.fa.fa-spin.fa-refresh(ng-if="!player.InParty&&network.activeParty.Status>2")
+              | {{player.Name}}
+      b {{PartyStatusN[network.activeParty.Status]}}

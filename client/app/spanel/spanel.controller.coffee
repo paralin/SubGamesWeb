@@ -15,6 +15,8 @@ angular.module 'subgamesApp'
   $scope.network = Network
   $scope.selectedGame = $rootScope.GameTypeSel[0]
   $scope.selectedGameMode = $rootScope.GameModeNA[0]
+  $scope.openParty = ->
+    Network.stream.do.startParty $scope.gameParams.reqFollow, $scope.gameParams.reqSub, $scope.gameParams.selectedGameMode.id, $scope.gameParams.selectedRegion.id
   $scope.closePool = ->
     Network.stream.do.unregister()
   $scope.openPool = ->

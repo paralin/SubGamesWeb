@@ -129,3 +129,11 @@ angular.module 'subgamesApp', [
     2: "Bot is setting up the lobby..."
     3: "Waiting for players to join..."
     4: "Game is in progress."
+  $rootScope.PartyStatusN =
+    0: "Waiting for a lobby bot..."
+    1: "Waiting for a bot host..."
+    2: "Bot is setting up the party..."
+    3: "Bot is waiting for the host to accept..."
+    4: "Bot is waiting for a full party..."
+    5: "You are queuing for a match!"
+    6: "Game is in progress."

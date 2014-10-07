@@ -12,6 +12,7 @@ class NetworkService
   activeGame: null
   activeSearch: null
   activePerms: null
+  activeParty: null
   activePlayerCount: 0
   activeFollowerCount: 0
   activeSubscriberCount: 0
@@ -62,6 +63,8 @@ class NetworkService
             text: err
             type: "error"
           return
+      startParty: (serv, reqFollow, reqSub, gameMode, region)->
+        @invoke("startparty", {RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
       startGame: (serv, playerCount, reqFollow, reqSub, gameMode, region)->
         @invoke("startsearch", {PlayerCount: playerCount, RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
       cancelGame: (serv)->
@@ -112,6 +115,7 @@ class NetworkService
         @activeStream = null
         @scope.$broadcast "clearStream"
         @activeGame = null
+        @activeParty = null
         @activeSearch = null
         @activePerms = null
         @activePlayerCount = 0
@@ -136,6 +140,12 @@ class NetworkService
       clearsetup: ->
         @activeGame = null
         @scope.$broadcast "clearGame"
+      partysnapshot: (snp)->
+        @activeParty = snp
+        @scope.$broadcast "partySnapshot", snp
+      clearparty: ->
+        @activeParty = null
+        @scope.$broadcast "clearParty"
     play:
       onopen: ->
         @activeStream = null
@@ -169,6 +179,12 @@ class NetworkService
       streamsnapshot: (snp)->
         @activeStream = snp
         @scope.$broadcast "streamSnapshot", snp
+      partysnapshot: (snp)->
+        @activeParty = snp
+        @scope.$broadcast "partySnapshot", snp
+      clearparty: ->
+        @activeParty = null
+        @scope.$broadcast "clearParty"
       setupsnapshot: (snp)->
         @activeGame = snp
         @scope.$broadcast "gameSnapshot", snp

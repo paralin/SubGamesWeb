@@ -24,11 +24,16 @@ angular.module 'subgamesApp'
       return plyr.Team
     else return -1
   $scope.getReady = ->
-    return false if !Network.activeGame?
-    plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
-    if plyr?
-      return plyr.Ready
-    return false
+    if Network.activeGame?
+      plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
+      if plyr?
+        return plyr.Ready
+      return false
+    if Network.activeParty?
+      plyr = _.find Network.activeParty.Players, {SteamID: Auth.currentUser.steam.steamid}
+      if plyr?
+        return plyr.InParty
+      return false
   $scope.showOverlay = ->
     Network.disconnected or !Network.activeStream?
   if $stateParams.streamer?
