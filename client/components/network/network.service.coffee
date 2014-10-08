@@ -55,6 +55,8 @@ class NetworkService
         @invoke "confirmteams"
       finalizeGame: (serv)->
         @invoke "finalizegame"
+      setAllowQueue: (serv, allow)->
+        @invoke "setallowqueue", {AllowQueue: allow}
       startUpdatePool: (serv, gameId )->
         @invoke("startupdatepool", {gameId: gameId}).then (err)->
           return if !err?
@@ -65,6 +67,10 @@ class NetworkService
           return
       startParty: (serv, reqFollow, reqSub)->
         @invoke("startparty", {RequireFollow: reqFollow, RequireSubscribe: reqSub})
+      addPartyPlayer: (serv)->
+        @invoke "addpartyplayer"
+      kickPartyPlayer: (serv, plyrid)->
+        @invoke "kickpartyplayer", {SteamID: plyrid}
       startGame: (serv, playerCount, reqFollow, reqSub, gameMode, region)->
         @invoke("startsearch", {PlayerCount: playerCount, RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
       cancelGame: (serv)->
@@ -141,6 +147,8 @@ class NetworkService
         @activeGame = null
         @scope.$broadcast "clearGame"
       partysnapshot: (snp)->
+        if !@activeParty? && snp?
+          @scope.$broadcast "joinedParty", snp
         @activeParty = snp
         @scope.$broadcast "partySnapshot", snp
       clearparty: ->
@@ -150,6 +158,7 @@ class NetworkService
       onopen: ->
         @activeStream = null
         @activeGame = null
+        @activeParty = null
         @activeSearch = null
         @play.do.checkAuth(@)
       permssnapshot: (snap)->
@@ -180,6 +189,8 @@ class NetworkService
         @activeStream = snp
         @scope.$broadcast "streamSnapshot", snp
       partysnapshot: (snp)->
+        if !@activeParty? && snp?
+          @scope.$broadcast "joinedParty", snp
         @activeParty = snp
         @scope.$broadcast "partySnapshot", snp
       clearparty: ->

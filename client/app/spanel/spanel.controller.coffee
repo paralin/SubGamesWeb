@@ -15,6 +15,14 @@ angular.module 'subgamesApp'
   $scope.network = Network
   $scope.selectedGame = $rootScope.GameTypeSel[0]
   $scope.selectedGameMode = $rootScope.GameModeNA[0]
+  $scope.range = (min, max, step) ->
+    step = step or 1
+    input = []
+    i = min
+    while i <= max
+      input.push i
+      i += step
+    input
   $scope.openParty = ->
     Network.stream.do.startParty $scope.gameParams.reqFollow, $scope.gameParams.reqSub
   $scope.closePool = ->

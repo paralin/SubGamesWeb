@@ -45,7 +45,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         div(style="width: 100%;margin-bottom:15px")
           | Player count: 
           input(type="number", name="playerCount", ng-model="gameParams.playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
-      button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null",ng-click="findGame()") Start a Game
+      button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="findGame()") Start a Game
       button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
       button.btn.btn-primary(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="openParty()") Start a Party
   .row(ng-if="network.activeGame != null || network.activeSearch != null")
@@ -106,8 +106,15 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         tbody
           tr(ng-repeat="player in network.activeParty.Players")
             td.playerRow 
-              //i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3)")
               i.fa.fa-check(ng-if="player.InParty&&network.activeParty.Status>2")
               i.fa.fa-spin.fa-refresh(ng-if="!player.InParty&&network.activeParty.Status>2")
               | {{player.Name}}
-      b {{PartyStatusN[network.activeParty.Status]}}
+            td.playerRow
+              i.fa.fa-ban(ng-if="!player.IsHost",ng-click="network.stream.do.kickPartyPlayer(player.SteamID)")
+          tr(ng-repeat="n in [] | range:(5-network.activeParty.Players.length)")
+            td.playerRow 
+              button.btn.btn-link(style="margin:0;padding:0",ng-click="network.stream.do.addPartyPlayer()",ng-class="{disabled: network.activeParty.Status!=4}") Add a Viewer
+            td.playerRow
+      p
+        b {{PartyStatusN[network.activeParty.Status]}}
+      button.btn(ng-class="{'btn-danger': network.activeParty.AllowQueue, 'btn-success': !network.activeParty.AllowQueue}", ng-click="network.stream.do.setAllowQueue(!network.activeParty.AllowQueue)") {{network.activeParty.AllowQueue ? "Don't Allow Queuing" : "Allow Queuing"}}

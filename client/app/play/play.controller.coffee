@@ -86,6 +86,9 @@ angular.module 'subgamesApp'
       window.aswal = null
     )
     return
+  c.push $rootScope.$on "joinedParty", ->
+    foundSound.play()
+    return
   c.push $rootScope.$on "clearSearch", ->
     queried = false
     return
