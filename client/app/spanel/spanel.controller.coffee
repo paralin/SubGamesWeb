@@ -59,6 +59,10 @@ angular.module 'subgamesApp'
     Network.stream.do.confirmTeams()
   $scope.cancelGame = ->
     Network.stream.do.cancelGame()
+  $scope.cancelParty = ->
+    Network.stream.do.cancelParty()
+  $scope.finalizeParty = ->
+    Network.stream.do.finalizeParty()
   $scope.finalizeGame = ->
     Network.stream.do.finalizeGame()
   $scope.allReady = ->

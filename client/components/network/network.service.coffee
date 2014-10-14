@@ -75,6 +75,10 @@ class NetworkService
         @invoke("startsearch", {PlayerCount: playerCount, RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
       cancelGame: (serv)->
         @invoke "stopsearch"
+      cancelParty: (serv)->
+        @invoke "cancelparty"
+      finalizeParty: (serv)->
+        @invoke "finalizeparty"
     play:
       checkAuth: (serv)->
         @invoke("checkauth").then (items)=>

@@ -47,6 +47,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           input(type="number", name="playerCount", ng-model="gameParams.playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
       button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="findGame()") Start a Game
       button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
+      button.btn.btn-danger(ng-if="network.activeParty!=null",ng-click="cancelParty()") Cancel Party
       button.btn.btn-primary(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="openParty()") Start a Party
   .row(ng-if="network.activeGame != null || network.activeSearch != null")
     .col-md-5.tile(style="padding:20px")
@@ -117,4 +118,4 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
             td.playerRow
       p
         b {{PartyStatusN[network.activeParty.Status]}}
-      button.btn(ng-class="{'btn-danger': network.activeParty.AllowQueue, 'btn-success': !network.activeParty.AllowQueue}", ng-click="network.stream.do.setAllowQueue(!network.activeParty.AllowQueue)") {{network.activeParty.AllowQueue ? "Don't Allow Queuing" : "Allow Queuing"}}
+      button.btn.success(ng-if="network.activeParty.Status==4",ng-click="finalizeParty()") Finalize Party
