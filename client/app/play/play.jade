@@ -4,21 +4,18 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
     i.fa.fa-remove
     | Leave Player Pool
 #homeCont
-  .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeSearch==null&&network.activeParty==null") In Player Pool
-  .titleCont(style="font-size:39px",ng-if="network.activeGame!=null") In Game
+  .titleCont(style="font-size:39px",ng-if="network.activeLobby==null&&network.activeParty==null") In Player Pool
+  .titleCont(style="font-size:39px",ng-if="network.activeLobby!=null") In Game
   .titleCont(style="font-size:39px",ng-if="network.activeParty!=null") In Party
-  .titleCont(style="font-size:39px",ng-if="network.activeGame==null&&network.activeParty==null&&network.activeSearch!=null") In Next Game
-  .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null") Waiting for a game slot.
-  .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null&&network.activeParty==null") Waiting for game start...
-  .subtitleCont(ng-if="network.activeGame != null") {{SetupStatusN[network.activeGame.Details.Status]}}
+  .subtitleCont(ng-if="network.activeLobby==null&&network.activeParty==null") Waiting for a game slot.
+  .subtitleCont(ng-if="network.activeLobby != null") {{SetupStatusN[network.activeGame.Details.Status]}}
   .subtitleCont(ng-if="network.activeParty != null") {{PartyStatusN[network.activeParty.Status]}}
   .netAnim(net-anim="")
-  .subtitleCont(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null") You will hear a sound and accept/decline the match.
-  .subtitleCont(ng-if="network.activeSearch!=null&&network.activeGame==null&&network.activeParty==null") Finding other players...
-  .subtitleCont(ng-if="network.activeGame!=null&&network.activeGame.Details.Status>=3") 
+  .subtitleCont(ng-if="network.activeLobby==null&&network.activeParty==null") You will hear a sound and accept/decline the match.
+  .subtitleCont(ng-if="network.activeLobby!=null&&network.activeLobby.Status==4") 
     | Lobby password: 
-    b {{network.activeGame.Details.Password}}
-  .subtitleCont(ng-if="network.activeGame!=null&&network.activeGame.Details.Status>=3",style="margin-top:10px") 
+    b {{network.activeLobby.Password}}
+  .subtitleCont(ng-if="network.activeLobby!=null",style="margin-top:10px") 
     i.fa.fa-exclamation(ng-if="!getReady()")
     i.fa.fa-check(ng-if="getReady()")
     | Join team: 

@@ -21,8 +21,7 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         ui-select-choices(repeat="game in GameTypeSel")
           div(ng-bind-html="game.name")
       button.btn.btn-success(ng-if="network.activeStream==null",ng-click="openPool()") Open Pool
-      button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame==null",ng-click="closePool()") Close Pool
-      button.btn.btn-danger(ng-if="network.activeStream!=null&&network.activeGame!=null",ng-click="closePool()") Close Pool & Cancel Game
+      button.btn.btn-danger(ng-if="network.activeStream!=null",ng-click="closePool()") Close Pool
     .col-sm-3.tile(style="padding:20px",ng-if="network.activeStream!=null")
       .tileTitle Games
       ui-select(ng-model="gameParams.selectedGameMode", theme="selectize", ng-disabled="network.activeGame!=null||network.activeSearch!=null", ng-if="selectedGame.id==0")
@@ -42,14 +41,11 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           label
           input#reqSub(type="checkbox", name="requireSubscribe", ng-model="gameParams.reqSub", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
           | Require subscribe
-        div(style="width: 100%;margin-bottom:15px")
-          | Player count: 
-          input(type="number", name="playerCount", ng-model="gameParams.playerCount", ng-disabled="network.activeGame!=null||network.activeSearch!=null", min="1", max="9", style="width: 40px")
-      button.btn.btn-success(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="findGame()") Start a Game
-      button.btn.btn-danger(ng-if="network.activeSearch!=null||network.activeGame!=null",ng-click="cancelGame()") Cancel Game
+      button.btn.btn-success(ng-if="network.activeLobby==null&&network.activeParty==null",ng-click="startLobby()") Start a Lobby
+      button.btn.btn-danger(ng-if="network.activeLobby!=null",ng-click="cancelLobby()") Cancel Lobby
       button.btn.btn-danger(ng-if="network.activeParty!=null",ng-click="cancelParty()") Cancel Party
-      button.btn.btn-primary(ng-if="network.activeSearch==null&&network.activeGame==null&&network.activeParty==null",ng-click="openParty()") Start a Party
-  .row(ng-if="network.activeGame != null || network.activeSearch != null")
+      button.btn.btn-primary(ng-if="network.activeLobby==null&&network.activeParty==null",ng-click="openParty()") Start a Party
+  .row(ng-if="network.activeLobby != null")
     .col-md-5.tile(style="padding:20px")
       .tileTitle Radiant
       table.table.table-striped
@@ -60,12 +56,16 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         tbody
           tr(ng-repeat="player in allPlayers({Team: 0})")
             td.playerRow 
-              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3)")
-              i.fa.fa-check(ng-if="player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3")
+              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.InLobby||!player.InCorrectTeam)")
+              i.fa.fa-check(ng-if="player.InLobby&&player.InCorrectTeam")
               | {{player.Name}}
             td.playerRow
-              i.fa.fa-chevron-right(ng-if="network.activeGame==null",ng-click="swapPlayer(player)")
-              i.fa.fa-ban(ng-if="!player.IsHost&&(network.activeSearch!=null||(network.activeGame!=null&&network.activeGame.Details.Status==3))",ng-click="kickPlayer(player)")
+              i.fa.fa-chevron-right(ng-if="network.activeLobby==null",ng-click="swapPlayer(player)")
+              i.fa.fa-ban(ng-if="!player.IsHost&&network.activeLobby.Status==3",ng-click="kickPlayer(player)")
+          tr(ng-repeat="n in [] | range:(5-allPlayers({Team: 0}).length)")
+            td.playerRow 
+              button.btn.btn-link(style="margin:0;padding:0",ng-click="network.stream.do.addLobbyPlayer(0)",ng-class="{disabled: network.activeLobby.Status!=4}") Add a Viewer
+            td.playerRow
     .col-md-5.tile(style="padding:20px")
       .tileTitle Dire
       table.table.table-striped
@@ -76,25 +76,19 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
         tbody
           tr(ng-repeat="player in allPlayers({Team: 1})")
             td.playerRow 
-              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3)")
-              i.fa.fa-check(ng-if="player.Ready&&network.activeGame!=null&&network.activeGame.Details.Status==3")
+              i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.InLobby||!player.InCorrectTeam)")
+              i.fa.fa-check(ng-if="player.InLobby&&player.InCorrectTeam")
               | {{player.Name}}
             td.playerRow
-              i.fa.fa-chevron-left(ng-if="network.activeGame==null",ng-click="swapPlayer(player)")
-              i.fa.fa-ban(ng-if="!player.IsHost&&(network.activeSearch!=null||(network.activeGame!=null&&network.activeGame.Details.Status==3))",ng-click="kickPlayer(player)")
-    .col-md-10.arrangeTeams(ng-if="network.activeSearch != null")
-      p Arrange the teams. When ready, the bot will set up the lobby.
-      button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="confirmTeams()",style="margin-right:10px;") Confirm Teams
-      //button.btn.btn-success(ng-if="network.activeSearch.Players.length>network.activeSearch.PlayerCount",ng-click="startChallenge()",style="margin-left:10px") Start Challenge
-      p(ng-if="network.activeSearch.Players.length<=network.activeSearch.PlayerCount")
-        i.fa.fa-spin.fa-refresh 
-        | Searching for players...
-    .col-md-10.arrangeTeams(ng-if="network.activeGame != null")
-      p {{SetupStatusN[network.activeGame.Details.Status]}}
-      p(style="font-family:'audimatregular'",ng-if="network.activeGame.Details.Status>2")
-        | Lobby password: 
-        b(style="font-family:'audimatbold'") {{network.activeGame.Details.Password}}
-      button.btn.btn-success(ng-if="network.activeGame.Details.Status==3&&allReady()",ng-click="finalizeGame()") Launch Game
+              i.fa.fa-chevron-left(ng-if="network.activeLobby==null",ng-click="swapPlayer(player)")
+              i.fa.fa-ban(ng-if="!player.IsHost&&network.activeLobby.Status==3",ng-click="kickPlayer(player)")
+          tr(ng-repeat="n in [] | range:(5-allPlayers({Team: 1}).length)")
+            td.playerRow 
+              button.btn.btn-link(style="margin:0;padding:0",ng-click="network.stream.do.addLobbyPlayer(1)",ng-class="{disabled: network.activeLobby.Status!=4}") Add a Viewer
+            td.playerRow
+    .col-md-10.arrangeTeams(ng-if="network.activeLobby != null")
+      p {{LobbyStatusN[network.activeLobby.Status]}}
+      button.btn.btn-success(ng-if="network.activeLobby!=null&&network.activeLobby.Status==4",ng-click="finalizeLobby()") Start Game
   .row(ng-if="network.activeParty!=null")
     .col-md-3.tile(style="padding:20px")
       .tileTitle Active Party

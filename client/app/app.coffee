@@ -116,24 +116,15 @@ angular.module 'subgamesApp', [
   ]
   $rootScope.GameTypeL =
     0: "http://i.imgur.com/rlx1Kb2.png"
-  $rootScope.SetupStatus =
-    QUEUE: 0
-    QUEUEHOST: 1
-    INIT: 2
-    WAIT: 3
-    READY: 4
-  $rootScope.SetupStatusK = _.invert $rootScope.SetupStatus
-  $rootScope.SetupStatusN =
-    0: "Waiting for a lobby bot..."
-    1: "Waiting for a bot host..."
-    2: "Bot is setting up the lobby..."
-    3: "Waiting for players to join..."
-    4: "Game is in progress."
   $rootScope.PartyStatusN =
-    0: "Waiting for a lobby bot..."
+    0: "Waiting for a party bot..."
     1: "Waiting for a bot host..."
     2: "Bot is setting up the party..."
     3: "Bot is waiting for the host to accept..."
     4: "Waiting for queue start..."
-    5: "You are queuing for a match!"
-    6: "Game is in progress."
+  $rootScope.LobbyStatusN =
+    0: "Waiting for a lobby bot..."
+    1: "Waiting for a bot host..."
+    2: "Bot is setting up the lobby..."
+    3: "Waiting for the host to join lobby & team..."
+    4: "Waiting for game start..."

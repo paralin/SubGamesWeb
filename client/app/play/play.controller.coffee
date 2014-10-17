@@ -18,16 +18,16 @@ angular.module 'subgamesApp'
       return $scope.joinStatus
   $scope.playerCount = 9
   $scope.getTeam = ->
-    return -1 if !Network.activeGame?
-    plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
+    return -1 if !Network.activeLobby?
+    plyr = _.find Network.activeLobby.Players, {SteamID: Auth.currentUser.steam.steamid}
     if plyr?
       return plyr.Team
     else return -1
   $scope.getReady = ->
-    if Network.activeGame?
-      plyr = _.find Network.activeGame.Details.Players, {SID: Auth.currentUser.steam.steamid}
+    if Network.activeLobby?
+      plyr = _.find Network.activeLobby.Players, {SteamID: Auth.currentUser.steam.steamid}
       if plyr?
-        return plyr.Ready
+        return plyr.InLobby && plyr.InCorrectTeam
       return false
     if Network.activeParty?
       plyr = _.find Network.activeParty.Players, {SteamID: Auth.currentUser.steam.steamid}
@@ -66,9 +66,8 @@ angular.module 'subgamesApp'
     safeApply $rootScope, ->
       $location.url "/l"
   queried = false
-  c.push $rootScope.$on "searchSnapshot", ->
-    idx = _.findIndex Network.activeSearch.PotentialPlayers, {SID: Auth.currentUser.steam.steamid}
-    return if queried || idx is -1
+  c.push $rootScope.$on "inviteSnapshot", ->
+    return if queried
     queried = true
     foundSound.play()
     window.aswal = swal(

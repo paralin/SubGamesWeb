@@ -33,16 +33,10 @@ angular.module 'subgamesApp'
     "Connecting to the network..."
   $scope.showOverlay = ->
     Network.disconnected
-  $scope.findGame = ->
-    Network.stream.do.startGame $scope.gameParams.playerCount, $scope.gameParams.reqFollow, $scope.gameParams.reqSub, $scope.gameParams.selectedGameMode.id, $scope.gameParams.selectedRegion.id
+  $scope.startLobby = ->
+    Network.stream.do.startLobby $scope.gameParams.reqFollow, $scope.gameParams.reqSub, $scope.gameParams.selectedGameMode.id, $scope.gameParams.selectedRegion.id
   $scope.allPlayers = (query)->
-    j = null
-    if Network.activeGame?
-      j = Network.activeGame.Details.Players
-    else if Network.activeSearch?
-      j = _.union Network.activeSearch.Players, Network.activeSearch.PotentialPlayers
-    else
-      return []
+    j = Network.activeLobby.Players
     j = _.filter j, query if query?
     j
   $scope.gameParams = 
@@ -54,17 +48,17 @@ angular.module 'subgamesApp'
   $scope.swapPlayer = (player)->
     Network.stream.do.swapPlayer player.SID
   $scope.kickPlayer = (player)->
-    Network.stream.do.kickPlayer player.SID
+    Network.stream.do.kickLobbyPlayer player.SID
   $scope.confirmTeams = ->
     Network.stream.do.confirmTeams()
-  $scope.cancelGame = ->
-    Network.stream.do.cancelGame()
+  $scope.cancelLobby = ->
+    Network.stream.do.cancelLobby()
   $scope.cancelParty = ->
     Network.stream.do.cancelParty()
   $scope.finalizeParty = ->
     Network.stream.do.finalizeParty()
-  $scope.finalizeGame = ->
-    Network.stream.do.finalizeGame()
+  $scope.finalizeLobby = ->
+    Network.stream.do.finalizeLobby()
   $scope.allReady = ->
     return false if !Network.activeGame
     for plyr in Network.activeGame.Details.Players

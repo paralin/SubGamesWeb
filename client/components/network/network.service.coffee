@@ -9,10 +9,10 @@ class NetworkService
 
   streamers: []
   activeStream: null
-  activeGame: null
-  activeSearch: null
   activePerms: null
   activeParty: null
+  activeLobby: null
+  activeLobbyInvite: null
   activePlayerCount: 0
   activeFollowerCount: 0
   activeSubscriberCount: 0
@@ -47,16 +47,6 @@ class NetworkService
     stream:
       unregister: (serv)->
         @invoke "unregister"
-      swapPlayer: (serv, steamId)->
-        @invoke "swapplayer", {SteamID: steamId}
-      kickPlayer: (serv, steamId)->
-        @invoke "kickplayer", {SteamID: steamId}
-      confirmTeams: (serv)->
-        @invoke "confirmteams"
-      finalizeGame: (serv)->
-        @invoke "finalizegame"
-      setAllowQueue: (serv, allow)->
-        @invoke "setallowqueue", {AllowQueue: allow}
       startUpdatePool: (serv, gameId )->
         @invoke("startupdatepool", {gameId: gameId}).then (err)->
           return if !err?
@@ -67,18 +57,26 @@ class NetworkService
           return
       startParty: (serv, reqFollow, reqSub)->
         @invoke("startparty", {RequireFollow: reqFollow, RequireSubscribe: reqSub})
+      startLobby: (serv, reqFollow, reqSub, gameMode, region)->
+        @invoke("startlobby", {RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
       addPartyPlayer: (serv)->
         @invoke "addpartyplayer"
+      addLobbyPlayer: (serv, team)->
+        @invoke "addlobbyplayer", {Team: team}
+      swapPlayer: (serv, plyrid)->
+        @invoke "swaplobbyplayer", {SteamID: plyrid}
       kickPartyPlayer: (serv, plyrid)->
         @invoke "kickpartyplayer", {SteamID: plyrid}
-      startGame: (serv, playerCount, reqFollow, reqSub, gameMode, region)->
-        @invoke("startsearch", {PlayerCount: playerCount, RequireFollow: reqFollow, RequireSubscribe: reqSub, GameMode: gameMode, Region: region})
-      cancelGame: (serv)->
-        @invoke "stopsearch"
+      kickLobbyPlayer: (serv, plyrid)->
+        @invoke "kicklobbyplayer", {SteamID: plyrid}
       cancelParty: (serv)->
         @invoke "cancelparty"
       finalizeParty: (serv)->
         @invoke "finalizeparty"
+      cancelLobby: (serv)->
+        @invoke "cancellobby"
+      finalizeLobby: (serv)->
+        @invoke "finalizelobby"
     play:
       checkAuth: (serv)->
         @invoke("checkauth").then (items)=>
@@ -124,10 +122,10 @@ class NetworkService
       clearstream: ->
         @activeStream = null
         @scope.$broadcast "clearStream"
-        @activeGame = null
         @activeParty = null
-        @activeSearch = null
         @activePerms = null
+        @activeLobby = null
+        @activeLobbyInvite = null
         @activePlayerCount = 0
         @activeFollowerCount = 0
         @activeSubscriberCount = 0
@@ -138,18 +136,6 @@ class NetworkService
         @activePlayerCount = upd.Players
         @activeFollowerCount = upd.Followers
         @activeSubscriberCount = upd.Subscribers
-      searchsnapshot: (snp)->
-        @activeSearch = snp
-        @scope.$broadcast "searchSnapshot", snp
-      clearsearch: ->
-        @activeSearch = null
-        @scope.$broadcast "clearSearch"
-      setupsnapshot: (snp)->
-        @activeGame = snp
-        @scope.$broadcast "gameSnapshot", snp
-      clearsetup: ->
-        @activeGame = null
-        @scope.$broadcast "clearGame"
       partysnapshot: (snp)->
         if !@activeParty? && snp?
           @scope.$broadcast "joinedParty", snp
@@ -158,12 +144,20 @@ class NetworkService
       clearparty: ->
         @activeParty = null
         @scope.$broadcast "clearParty"
+      lobbysnapshot: (snp)->
+        if !@activeLobby && snp?
+          @scope.$broadcast "joinedLobby", snp
+        @activeLobby = snp
+        @scope.$broadcast "lobbySnapshot", snp
+      clearlobby: ->
+        @activeLobby = null
+        @scope.$broadcast "clearLobby"
     play:
       onopen: ->
         @activeStream = null
-        @activeGame = null
+        @activeLobby = null
+        @activeLobbyInvite = null
         @activeParty = null
-        @activeSearch = null
         @play.do.checkAuth(@)
       permssnapshot: (snap)->
         @activePerms = snap
@@ -200,18 +194,16 @@ class NetworkService
       clearparty: ->
         @activeParty = null
         @scope.$broadcast "clearParty"
-      setupsnapshot: (snp)->
-        @activeGame = snp
-        @scope.$broadcast "gameSnapshot", snp
-      clearsetup: ->
-        @activeGame = null
-        @scope.$broadcast "clearGame"
-      searchsnapshot: (snp)->
-        @activeSearch = snp
-        @scope.$broadcast "searchSnapshot", snp
-      clearsearch: ->
-        @activeSearch = null
-        @scope.$broadcast "clearSearch"
+      lobbysnapshot: (snp)->
+        if !@activeLobby? && snp?
+          @scope.$broadcast "joinedLobby", snp
+        @activeLobby = snp
+        @scope.$broadcast "lobbySnapshot", snp
+      clearlobby: ->
+        @activeLobby = null
+        @scope.$broadcast "clearLobby"
+      invitesnapshot: ->
+        @scope.$broadcast "inviteSnapshot"
 
   callWhenOpen: (name, cb)->
     cont = @[name]
