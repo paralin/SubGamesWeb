@@ -46,9 +46,9 @@ angular.module 'subgamesApp'
     playerCount: 9
     selectedRegion: $rootScope.RegionSel[0]
   $scope.swapPlayer = (player)->
-    Network.stream.do.swapPlayer player.SID
+    Network.stream.do.swapPlayer player.SteamID
   $scope.kickPlayer = (player)->
-    Network.stream.do.kickLobbyPlayer player.SID
+    Network.stream.do.kickLobbyPlayer player.SteamID
   $scope.confirmTeams = ->
     Network.stream.do.confirmTeams()
   $scope.cancelLobby = ->

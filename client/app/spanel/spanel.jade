@@ -57,11 +57,12 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           tr(ng-repeat="player in allPlayers({Team: 0})")
             td.playerRow 
               i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.InLobby||!player.InCorrectTeam)")
-              i.fa.fa-check(ng-if="player.InLobby&&player.InCorrectTeam")
+              i.fa.fa-check(ng-if="player.InLobby&&player.InCorrectTeam&&!player.AddedByOutside")
+              i.fa.fa-minus-circle(ng-if="player.InLobby&&player.AddedByOutside")
               | {{player.Name}}
             td.playerRow
-              i.fa.fa-chevron-right(ng-if="network.activeLobby==null",ng-click="swapPlayer(player)")
-              i.fa.fa-ban(ng-if="!player.IsHost&&network.activeLobby.Status==3",ng-click="kickPlayer(player)")
+              i.fa.fa-chevron-right(ng-click="swapPlayer(player)",ng-if="!player.AddedByOutside")
+              i.fa.fa-ban(ng-if="!player.IsHost",ng-click="kickPlayer(player)")
           tr(ng-repeat="n in [] | range:(5-allPlayers({Team: 0}).length)")
             td.playerRow 
               button.btn.btn-link(style="margin:0;padding:0",ng-click="network.stream.do.addLobbyPlayer(0)",ng-class="{disabled: network.activeLobby.Status!=4}") Add a Viewer
@@ -77,17 +78,21 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
           tr(ng-repeat="player in allPlayers({Team: 1})")
             td.playerRow 
               i.fa.fa-spin.fa-refresh(ng-if="player.IsPotential||(!player.InLobby||!player.InCorrectTeam)")
-              i.fa.fa-check(ng-if="player.InLobby&&player.InCorrectTeam")
+              i.fa.fa-check(ng-if="player.InLobby&&player.InCorrectTeam&&!player.AddedByOutside")
+              i.fa.fa-minus-circle(ng-if="player.InLobby&&player.AddedByOutside")
               | {{player.Name}}
             td.playerRow
-              i.fa.fa-chevron-left(ng-if="network.activeLobby==null",ng-click="swapPlayer(player)")
-              i.fa.fa-ban(ng-if="!player.IsHost&&network.activeLobby.Status==3",ng-click="kickPlayer(player)")
+              i.fa.fa-chevron-left(ng-click="swapPlayer(player)",ng-if="!player.AddedByOutside")
+              i.fa.fa-ban(ng-if="!player.IsHost",ng-click="kickPlayer(player)")
           tr(ng-repeat="n in [] | range:(5-allPlayers({Team: 1}).length)")
             td.playerRow 
               button.btn.btn-link(style="margin:0;padding:0",ng-click="network.stream.do.addLobbyPlayer(1)",ng-class="{disabled: network.activeLobby.Status!=4}") Add a Viewer
             td.playerRow
     .col-md-10.arrangeTeams(ng-if="network.activeLobby != null")
       p {{LobbyStatusN[network.activeLobby.Status]}}
+      p
+        b Password: 
+        | {{network.activeLobby.Password}}
       button.btn.btn-success(ng-if="network.activeLobby!=null&&network.activeLobby.Status==4",ng-click="finalizeLobby()") Start Game
   .row(ng-if="network.activeParty!=null")
     .col-md-3.tile(style="padding:20px")
