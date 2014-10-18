@@ -42,7 +42,7 @@ angular.module 'subgamesApp'
   $scope.gameParams = 
     reqFollow: false
     reqSub: false
-    selectedGameMode: null
+    selectedGameMode: $rootScope.GameModeNA[0]
     playerCount: 9
     selectedRegion: $rootScope.RegionSel[0]
   $scope.swapPlayer = (player)->
