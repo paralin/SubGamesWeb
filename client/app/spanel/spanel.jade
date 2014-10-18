@@ -90,8 +90,8 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
             td.playerRow
     .col-md-10.arrangeTeams(ng-if="network.activeLobby != null")
       p {{LobbyStatusN[network.activeLobby.Status]}}
-      p
-        b Password: 
+      p(ng-if="network.activeLobby.Status>=3")
+        b Password:  
         | {{network.activeLobby.Password}}
       button.btn.btn-success(ng-if="network.activeLobby!=null&&network.activeLobby.Status==4",ng-click="finalizeLobby()") Start Game
   .row(ng-if="network.activeParty!=null")
