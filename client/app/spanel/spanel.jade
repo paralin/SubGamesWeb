@@ -24,22 +24,22 @@ div(connectoverlay="{{showOverlay()}}",message="{{overlayMessage()}}")
       button.btn.btn-danger(ng-if="network.activeStream!=null",ng-click="closePool()") Close Pool
     .col-sm-3.tile(style="padding:20px",ng-if="network.activeStream!=null")
       .tileTitle Games
-      ui-select(ng-model="gameParams.selectedGameMode", theme="selectize", ng-disabled="network.activeGame!=null||network.activeSearch!=null", ng-if="selectedGame.id==0")
+      ui-select(ng-model="gameParams.selectedGameMode", theme="selectize", ng-disabled="network.activeLobby!=null||network.activeParty!=null", ng-if="selectedGame.id==0")
         ui-select-match(placeholder="Select a mode...") {{$select.selected.name}}
         ui-select-choices(repeat="game in GameModeNA")
           div(ng-bind-html="game.name")
-      ui-select(ng-model="gameParams.selectedRegion", theme="selectize", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
+      ui-select(ng-model="gameParams.selectedRegion", theme="selectize", ng-disabled="network.activeLobby!=null||network.activeParty!=null")
         ui-select-match(placeholder="Select a region...") {{$select.selected.name}}
         ui-select-choices(repeat="region in RegionSel")
           div(ng-bind-html="region.name")
       form(role="form")
         .checkbox
           label
-          input#reqFollow(type="checkbox", name="requireFollow", ng-model="gameParams.reqFollow", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
+          input#reqFollow(type="checkbox", name="requireFollow", ng-model="gameParams.reqFollow", ng-disabled="network.activeParty!=null||network.activeLobby!=null")
           | Require follow
         .checkbox
           label
-          input#reqSub(type="checkbox", name="requireSubscribe", ng-model="gameParams.reqSub", ng-disabled="network.activeGame!=null||network.activeSearch!=null")
+          input#reqSub(type="checkbox", name="requireSubscribe", ng-model="gameParams.reqSub", ng-disabled="network.activeParty!=null||network.activeLobby!=null")
           | Require subscribe
       button.btn.btn-success(ng-if="network.activeLobby==null&&network.activeParty==null",ng-click="startLobby()") Start a Lobby
       button.btn.btn-danger(ng-if="network.activeLobby!=null",ng-click="cancelLobby()") Cancel Lobby
